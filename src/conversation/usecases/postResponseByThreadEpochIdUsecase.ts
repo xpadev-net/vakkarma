@@ -256,7 +256,7 @@ export const postResponseByThreadEpochIdUsecase = async (
 
   // また、スレッドのupdated_atも更新する必要がある
   // メールが'sage'でない場合のみ
-  if (isSage(mailResult.value)) {
+  if (!isSage(mailResult.value)) {
     logger.debug({
       operation: "postResponseByThreadEpochId",
       threadId: writeThreadIdResult.value.val,
