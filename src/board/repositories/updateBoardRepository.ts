@@ -9,6 +9,7 @@ import { mapBoardRecordToDomain } from "./boardRecordMapper";
 
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import type { BoardRecord } from "./boardRecordMapper";
 
 export const updateBoardRepository = async (
   { sql, logger }: VakContext,
@@ -38,7 +39,7 @@ export const updateBoardRepository = async (
   });
 
   try {
-    const rows = await sql`
+    const rows = await sql<BoardRecord[]>`
       UPDATE boards
       SET
         slug = ${slug},

@@ -9,6 +9,7 @@ import { mapBoardRecordToDomain } from "./boardRecordMapper";
 
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import type { BoardRecord } from "./boardRecordMapper";
 
 export const setDefaultBoardRepository = async (
   { sql, logger }: VakContext,
@@ -28,7 +29,7 @@ export const setDefaultBoardRepository = async (
         WHERE is_default = TRUE
       `;
 
-      const rows = await trx`
+      const rows = await trx<BoardRecord[]>`
         UPDATE boards
         SET
           is_default = TRUE,

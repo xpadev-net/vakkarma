@@ -11,7 +11,7 @@ import type { BoardLink } from "./boardTypes";
 import type { BoardContext } from "../../src/board/types/BoardContext";
 import type { ReadResponse } from "../../src/conversation/domain/read/ReadResponse";
 import type { ReadThread } from "../../src/conversation/domain/read/ReadThread";
-import type { FunctionalComponent } from "preact";
+import type { FC } from "hono/jsx";
 
 type ThreadWithResponses = {
   thread: ReadThread;
@@ -26,7 +26,7 @@ type BoardTopPageProps = {
   acceptLanguage?: string;
 };
 
-export const BoardTopPage: FunctionalComponent<BoardTopPageProps> = ({
+export const BoardTopPage: FC<BoardTopPageProps> = ({
   boardContext,
   boards,
   threadTop30,

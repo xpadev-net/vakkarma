@@ -1,13 +1,12 @@
 import type { BoardLink } from "./boardTypes";
-import type { FunctionalComponent } from "preact";
-
+import type { FC } from "hono/jsx";
 
 type BoardSidebarProps = {
   boards: BoardLink[];
   activeSlug: string;
 };
 
-export const BoardSidebar: FunctionalComponent<BoardSidebarProps> = ({
+export const BoardSidebar: FC<BoardSidebarProps> = ({
   boards,
   activeSlug,
 }) => {

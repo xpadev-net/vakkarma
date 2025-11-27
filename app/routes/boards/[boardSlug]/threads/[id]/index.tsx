@@ -1,2 +1,2 @@
-export { default } from "../../../../threads/[id]/index.tsx";
+export { default } from "../../../../threads/[id]/index";
 

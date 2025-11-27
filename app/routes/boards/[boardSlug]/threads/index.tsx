@@ -1,3 +1,3 @@
-export { POST } from "../../../threads/index.tsx";
-export { default } from "../../../threads/index.tsx";
+export { POST } from "../../../threads/index";
+export { default } from "../../../threads/index";
 

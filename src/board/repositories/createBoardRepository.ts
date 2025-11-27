@@ -7,6 +7,7 @@ import { mapBoardRecordToDomain } from "./boardRecordMapper";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
 import type { WriteBoard } from "../domain/write/WriteBoard";
+import type { BoardRecord } from "./boardRecordMapper";
 
 export const createBoardRepository = async (
   { sql, logger }: VakContext,
@@ -20,7 +21,7 @@ export const createBoardRepository = async (
   });
 
   try {
-    const rows = await sql`
+    const rows = await sql<BoardRecord[]>`
       INSERT INTO boards(
         id,
         slug,

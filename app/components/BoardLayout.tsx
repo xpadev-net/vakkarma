@@ -2,15 +2,15 @@
 import { BoardSidebar } from "./BoardSidebar";
 
 import type { BoardLink } from "./boardTypes";
-import type { ComponentChildren, FunctionalComponent } from "preact";
+import type { Child, FC } from "hono/jsx";
 
 type BoardLayoutProps = {
   boards: BoardLink[];
   activeSlug: string;
-  children: ComponentChildren;
+  children?: Child;
 };
 
-export const BoardLayout: FunctionalComponent<BoardLayoutProps> = ({
+export const BoardLayout: FC<BoardLayoutProps> = ({
   boards,
   activeSlug,
   children,
