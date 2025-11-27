@@ -44,7 +44,6 @@
     "eslint-plugin-import-x": "^4.8.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "libpg-query": "^16.3.0",
-    "semver": "^7.7.3",
     "tailwindcss": "^4.0.14",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1",

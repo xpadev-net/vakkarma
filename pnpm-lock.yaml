@@ -93,9 +93,6 @@ importers:
       libpg-query:
         specifier: ^16.3.0
         version: 16.3.0(encoding@0.1.13)
-      semver:
-        specifier: ^7.7.3
-        version: 7.7.3
       tailwindcss:
         specifier: ^4.0.14
         version: 4.0.14
