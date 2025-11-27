@@ -13,14 +13,15 @@ import type { VakContext } from "../../shared/types/VakContext";
 // updated_atが新しい順に30個のスレッドを取得
 // かつ、新しい先頭の10個は、レスポンスの内容も含めて取得
 // レスポンスの内容は、先頭のレスポンス一つと、posted_atが新しい順に10個
-export const getLatest30ThreadsRepository = async ({
-  sql,
-  logger,
-}: VakContext): Promise<
+export const getLatest30ThreadsRepository = async (
+  { sql, logger }: VakContext,
+  { boardId }: { boardId: string }
+): Promise<
   Result<ReadThread[], DatabaseError | DataNotFoundError | ValidationError>
 > => {
   logger.debug({
     operation: "getLatest30Threads",
+    boardId,
     message: "Fetching latest 30 threads ordered by updated_at",
   });
 
@@ -45,6 +46,8 @@ export const getLatest30ThreadsRepository = async ({
             LEFT JOIN
                 responses as r
             ON  t.id = r.thread_id
+        WHERE
+            t.board_id = ${boardId}::uuid
         GROUP BY
             t.id,
             t.title

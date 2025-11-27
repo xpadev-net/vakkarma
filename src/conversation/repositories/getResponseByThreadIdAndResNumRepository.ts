@@ -32,9 +32,11 @@ export const getResponseByThreadIdAndResNumRepository = async (
   {
     threadId,
     responseNumber,
+    boardId,
   }: {
     threadId: WriteThreadId;
     responseNumber: WriteResponseNumber;
+    boardId: string;
   }
 ): Promise<
   Result<
@@ -68,7 +70,9 @@ export const getResponseByThreadIdAndResNumRepository = async (
     WITH resp_count AS (
       SELECT thread_id, COUNT(*)::int AS total_count
       FROM responses
-      WHERE thread_id = ${threadId.val}::uuid
+      WHERE thread_id IN (
+        SELECT id FROM threads WHERE id = ${threadId.val}::uuid AND board_id = ${boardId}::uuid
+      )
       GROUP BY thread_id
     ),
     selected AS (
@@ -77,8 +81,9 @@ export const getResponseByThreadIdAndResNumRepository = async (
         r.posted_at, r.response_content, r.hash_id, r.trip, t.title
       FROM responses AS r
       JOIN threads AS t ON r.thread_id = t.id
-      WHERE
-        r.thread_id = ${threadId.val}::uuid
+        WHERE
+          r.thread_id = ${threadId.val}::uuid
+        AND t.board_id = ${boardId}::uuid
         AND r.response_number = ${responseNumber.val}
       LIMIT 1
     )

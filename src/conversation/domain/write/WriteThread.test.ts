@@ -17,6 +17,7 @@ describe("WriteThread", () => {
     const result = createWriteThread({
       title: mockThreadTitle,
       postedAt: mockPostedAt,
+      boardId: "01953111-aaaa-4bbb-8ccc-0dddeeefff00",
     });
 
     expect(result.isOk()).toBe(true);
@@ -26,6 +27,7 @@ describe("WriteThread", () => {
       expect(thread.title).toBe(mockThreadTitle);
       expect(thread.postedAt).toBe(mockPostedAt);
       expect(thread.updatedAt).toBe(mockPostedAt); // postedAtと同じ値が設定される
+      expect(thread.boardId).toBe("01953111-aaaa-4bbb-8ccc-0dddeeefff00");
 
       // 自動生成されるIDフィールドの検証
       expect(thread.id._type).toBe("WriteThreadId");

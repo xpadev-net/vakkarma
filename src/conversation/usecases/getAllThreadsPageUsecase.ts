@@ -2,10 +2,14 @@ import { err, ok } from "neverthrow";
 
 import { getAllThreadsRepository } from "../repositories/getAllThreadsRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 
 // すべてのスレッドを取得するユースケース
-export const getAllThreadsPageUsecase = async (vakContext: VakContext) => {
+export const getAllThreadsPageUsecase = async (
+  vakContext: VakContext,
+  boardContext: BoardContext
+) => {
   const { logger } = vakContext;
 
   logger.info({
@@ -18,7 +22,9 @@ export const getAllThreadsPageUsecase = async (vakContext: VakContext) => {
     message: "Fetching all threads from repository",
   });
 
-  const threadsResult = await getAllThreadsRepository(vakContext);
+  const threadsResult = await getAllThreadsRepository(vakContext, {
+    boardId: boardContext.boardId,
+  });
   if (threadsResult.isErr()) {
     logger.error({
       operation: "getAllThreadsPage",

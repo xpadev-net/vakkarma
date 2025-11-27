@@ -28,7 +28,10 @@ import type { WriteThreadEpochId } from "../domain/write/WriteThreadEpochId";
 // 便宜上、スレッドタイトルも取得する
 export const getAllResponsesByThreadEpochIdRepository = async (
   { sql, logger }: VakContext,
-  { threadEpochId }: { threadEpochId: WriteThreadEpochId }
+  {
+    threadEpochId,
+    boardId,
+  }: { threadEpochId: WriteThreadEpochId; boardId: string }
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -60,8 +63,8 @@ export const getAllResponsesByThreadEpochIdRepository = async (
     WITH resp_count AS (
       SELECT thread_id, COUNT(*)::int AS total_count 
       FROM responses
-      WHERE thread_id IN (
-        SELECT id FROM threads WHERE epoch_id = ${threadEpochId.val}
+        WHERE thread_id IN (
+        SELECT id FROM threads WHERE epoch_id = ${threadEpochId.val} AND board_id = ${boardId}::uuid
       )
       GROUP BY thread_id
     )
@@ -83,6 +86,7 @@ export const getAllResponsesByThreadEpochIdRepository = async (
     JOIN resp_count AS rc
       ON rc.thread_id = r.thread_id
     WHERE t.epoch_id = ${threadEpochId.val}
+      AND t.board_id = ${boardId}::uuid
     ORDER BY r.response_number
     `;
 

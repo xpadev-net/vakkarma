@@ -2,11 +2,14 @@ import { createRoute } from "honox/factory";
 
 import { postThreadUsecase } from "../../../src/conversation/usecases/postThreadUsecase";
 import { ErrorMessage } from "../../components/ErrorMessage";
+import { resolveBoardContext } from "../../utils/getBoardContext";
 import { getIpAddress } from "../../utils/getIpAddress";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
+  const vakContext = { sql, logger };
+  const boardSlug = c.req.param("boardSlug");
 
   logger.info({
     operation: "threads/POST",
@@ -51,8 +54,19 @@ export const POST = createRoute(async (c) => {
     message: "IP address extracted for thread creation"
   });
 
+  const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
+  if (boardContextResult.isErr()) {
+    logger.error({
+      operation: "threads/POST",
+      error: boardContextResult.error,
+      message: "Failed to resolve board context",
+    });
+    return c.render(<ErrorMessage error={boardContextResult.error} />);
+  }
+
   const postThreadResult = await postThreadUsecase(
-    { sql, logger },
+    vakContext,
+    boardContextResult.value,
     {
       threadTitleRaw: title,
       authorNameRaw: name,
@@ -70,18 +84,24 @@ export const POST = createRoute(async (c) => {
     return c.render(<ErrorMessage error={postThreadResult.error} />);
   }
   const threadId = postThreadResult.value.val;
-  
+
   logger.info({
     operation: "threads/POST",
     threadId,
-    message: "Thread created successfully, redirecting to thread page"
+    boardSlug: boardSlug ?? "(default)",
+    message: "Thread created successfully, redirecting to thread page",
   });
-  
-  return c.redirect(`/threads/${threadId}`, 303);
+
+  const redirectBase = boardSlug
+    ? `/boards/${boardSlug}`
+    : `/boards/${boardContextResult.value.slug}`;
+
+  return c.redirect(`${redirectBase}/threads/${threadId}`, 303);
 });
 
 export default createRoute((c) => {
   const { logger } = c.var;
+  const boardSlug = c.req.param("boardSlug");
   
   logger.debug({
     operation: "threads/GET",
@@ -90,5 +110,9 @@ export default createRoute((c) => {
     message: "Thread index page requested, redirecting to home page"
   });
   
+  if (boardSlug) {
+    return c.redirect(`/boards/${boardSlug}`, 302);
+  }
+
   return c.redirect("/", 302);
 });

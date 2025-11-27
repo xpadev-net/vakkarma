@@ -1,0 +1,55 @@
+import { createRoute } from "honox/factory";
+
+import { updateBoardUsecase } from "../../../../../src/board/usecases/updateBoardUsecase";
+import { ErrorMessage } from "../../../../components/ErrorMessage";
+
+export const POST = createRoute(async (c) => {
+  const { sql, logger } = c.var;
+  const boardId = c.req.param("boardId");
+
+  if (!boardId) {
+    return c.render(<ErrorMessage error={new Error("板IDが指定されていません")} />);
+  }
+
+  if (!sql) {
+    return c.render(
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+    );
+  }
+
+  const body = await c.req.parseBody();
+
+  const slug = typeof body.slug === "string" ? body.slug : "";
+  const boardName = typeof body.boardName === "string" ? body.boardName : "";
+  const localRule = typeof body.localRule === "string" ? body.localRule : "";
+  const nanashiName =
+    typeof body.nanashiName === "string" ? body.nanashiName : "";
+  const maxContentLength = Number(body.maxContentLength);
+  const orderIndex =
+    typeof body.orderIndex === "string" && body.orderIndex.length > 0
+      ? Number(body.orderIndex)
+      : undefined;
+
+  const vakContext = { sql, logger };
+  const result = await updateBoardUsecase(vakContext, {
+    boardId,
+    slugRaw: slug,
+    boardNameRaw: boardName,
+    localRuleRaw: localRule,
+    defaultAuthorNameRaw: nanashiName,
+    maxContentLengthRaw: maxContentLength,
+    orderIndexRaw: orderIndex,
+  });
+
+  if (result.isErr()) {
+    return c.render(<ErrorMessage error={result.error} />);
+  }
+
+  return c.redirect("/admin", 303);
+});
+
+export default createRoute((c) => {
+  c.status(405);
+  return c.body(null);
+});
+

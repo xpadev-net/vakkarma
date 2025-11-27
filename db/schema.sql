@@ -15,15 +15,32 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: config; Type: TABLE; Schema: public; Owner: -
+-- Name: boards; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.config (
+CREATE TABLE public.boards (
+    id uuid NOT NULL,
+    slug text NOT NULL,
     board_name text NOT NULL,
     local_rule text NOT NULL,
     nanashi_name text NOT NULL,
     max_content_length integer NOT NULL,
-    admin_password text NOT NULL
+    is_active boolean DEFAULT true NOT NULL,
+    is_default boolean DEFAULT false NOT NULL,
+    order_index integer DEFAULT 0 NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: app_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.app_settings (
+    id integer NOT NULL,
+    admin_password text NOT NULL,
+    default_board_id uuid NOT NULL
 );
 
 
@@ -62,16 +79,41 @@ CREATE TABLE public.threads (
     title text NOT NULL,
     posted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL,
-    epoch_id bigint NOT NULL
+    epoch_id bigint NOT NULL,
+    board_id uuid NOT NULL
 );
 
 
 --
--- Name: config config_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: boards boards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.config
-    ADD CONSTRAINT config_pkey PRIMARY KEY (board_name);
+ALTER TABLE ONLY public.boards
+    ADD CONSTRAINT boards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: boards boards_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.boards
+    ADD CONSTRAINT boards_slug_key UNIQUE (slug);
+
+
+--
+-- Name: app_settings app_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.app_settings
+    ADD CONSTRAINT app_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: app_settings app_settings_id_check; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.app_settings
+    ADD CONSTRAINT app_settings_id_check CHECK ((id = 1));
 
 
 --
@@ -88,6 +130,22 @@ ALTER TABLE ONLY public.responses
 
 ALTER TABLE ONLY public.responses
     ADD CONSTRAINT responses_thread_id_response_number_key UNIQUE (thread_id, response_number);
+
+
+--
+-- Name: app_settings app_settings_default_board_id_fkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.app_settings
+    ADD CONSTRAINT app_settings_default_board_id_fkey FOREIGN KEY (default_board_id) REFERENCES public.boards(id);
+
+
+--
+-- Name: threads threads_board_id_fkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.threads
+    ADD CONSTRAINT threads_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
 
 
 --
@@ -143,6 +201,20 @@ CREATE INDEX idx_threads_updated_at ON public.threads USING btree (updated_at DE
 
 
 --
+-- Name: idx_threads_board_updated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_threads_board_updated_at ON public.threads USING btree (board_id, updated_at DESC);
+
+
+--
+-- Name: idx_boards_is_default; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_boards_is_default ON public.boards USING btree ((is_default)) WHERE (is_default = true);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -152,4 +224,5 @@ CREATE INDEX idx_threads_updated_at ON public.threads USING btree (updated_at DE
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20240629000000');
+    ('20240629000000'),
+    ('20251127023000');

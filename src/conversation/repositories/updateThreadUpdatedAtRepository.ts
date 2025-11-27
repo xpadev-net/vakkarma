@@ -14,7 +14,11 @@ import type { Result } from "neverthrow";
 // ThreadIdのみ受け取って操作するのは例外的
 export const updateThreadUpdatedAtRepository = async (
   { sql, logger }: VakContext,
-  { threadId, updatedAt }: { threadId: WriteThreadId; updatedAt: WritePostedAt }
+  {
+    threadId,
+    updatedAt,
+    boardId,
+  }: { threadId: WriteThreadId; updatedAt: WritePostedAt; boardId: string }
 ): Promise<Result<ReadThreadId, DatabaseError>> => {
   logger.debug({
     operation: "updateThreadUpdatedAt",
@@ -30,7 +34,9 @@ export const updateThreadUpdatedAtRepository = async (
         SET
             updated_at = ${updatedAt.val}
         WHERE
-            id = ${threadId.val}::uuid RETURNING id
+            id = ${threadId.val}::uuid
+            AND board_id = ${boardId}::uuid
+        RETURNING id
       `;
 
     if (!result || result.length !== 1) {

@@ -2,10 +2,12 @@ import { err, ok } from "neverthrow";
 
 import { getAllThreadsWithEpochIdRepository } from "../repositories/getAllThreadsWithEpochIdRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 
 export const getAllThreadsWithEpochIdUsecase = async (
-  vakContext: VakContext
+  vakContext: VakContext,
+  boardContext: BoardContext
 ) => {
   const { logger } = vakContext;
 
@@ -19,7 +21,9 @@ export const getAllThreadsWithEpochIdUsecase = async (
     message: "Fetching threads with epoch IDs from repository",
   });
 
-  const threads = await getAllThreadsWithEpochIdRepository(vakContext);
+  const threads = await getAllThreadsWithEpochIdRepository(vakContext, {
+    boardId: boardContext.boardId,
+  });
   if (threads.isErr()) {
     logger.error({
       operation: "getAllThreadsWithEpochId",

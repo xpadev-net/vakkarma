@@ -1,18 +1,12 @@
-import safeql from "@ts-safeql/eslint-plugin/config";
-import dotenv from "dotenv"; // dotenv をインポート
 import importPlugin from "eslint-plugin-import-x";
 import unusedImports from "eslint-plugin-unused-imports"; // eslint-plugin-unused-imports をインポート
 import tseslint from "typescript-eslint";
 
-dotenv.config(); // dotenv を読み込む
-const enableSafeQL = process.env.DISABLE_SAFEQL !== "true";
-const databaseUrl = `postgresql://${process.env.VITE_POSTGRES_USER}:${process.env.VITE_POSTGRES_PASSWORD}@localhost:5432/${process.env.VITE_POSTGRES_DB}?sslmode=disable`;
-
 export default tseslint.config(
-  ...tseslint.configs.recommended,
   {
     ignores: [
       "dist/",
+      "dist/**",
       "build/",
       "out/",
       "coverage/",
@@ -29,6 +23,9 @@ export default tseslint.config(
       "!config/important.js",
       "*.d.ts",
     ],
+  },
+  ...tseslint.configs.recommended,
+  {
     plugins: {
       import: importPlugin,
       "unused-imports": unusedImports, // unused-imports プラグインを追加
@@ -39,7 +36,7 @@ export default tseslint.config(
         "error",
         {
           selector: "variable",
-          format: ["camelCase"],
+          format: ["camelCase", "PascalCase"],
         },
         {
           selector: "typeLike",
@@ -108,13 +105,4 @@ export default tseslint.config(
       },
     },
   },
-  // SafeQL 設定を環境変数で制御するように追加
-  ...(enableSafeQL
-    ? [
-        safeql.configs.connections({
-          databaseUrl: databaseUrl,
-          targets: [{ tag: "sql", transform: "{type}[]" }],
-        }),
-      ]
-    : [])
 );

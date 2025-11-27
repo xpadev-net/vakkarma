@@ -6,11 +6,15 @@ import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { getLatest10ThreadsWithResponsesRepository } from "../repositories/getLatest10ThreadsWithResposesRepository";
 import { getLatest30ThreadsRepository } from "../repositories/getLatest30ThreadsRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadResponse } from "../domain/read/ReadResponse";
 import type { ReadThread } from "../domain/read/ReadThread";
 
-export const getTopPageUsecase = async (vakContext: VakContext) => {
+export const getTopPageUsecase = async (
+  vakContext: VakContext,
+  boardContext: BoardContext
+) => {
   const { logger } = vakContext;
 
   logger.info({
@@ -24,7 +28,10 @@ export const getTopPageUsecase = async (vakContext: VakContext) => {
     message: "Fetching top 30 threads",
   });
 
-  const threadsTop30Result = await getLatest30ThreadsRepository(vakContext);
+  const threadsTop30Result = await getLatest30ThreadsRepository(
+    vakContext,
+    { boardId: boardContext.boardId }
+  );
   if (threadsTop30Result.isErr()) {
     logger.error({
       operation: "getTopPageUsecase",

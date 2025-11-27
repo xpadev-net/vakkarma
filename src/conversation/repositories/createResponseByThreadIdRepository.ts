@@ -13,7 +13,8 @@ import type { Result } from "neverthrow";
 // レスポンスを作成するリポジトリ
 export const createResponseByThreadIdRepository = async (
   { sql, logger }: VakContext,
-  response: WriteResponse
+  response: WriteResponse,
+  { boardId }: { boardId: string }
 ): Promise<
   Result<
     {
@@ -39,33 +40,42 @@ export const createResponseByThreadIdRepository = async (
     const result = await sql<
       { id: string; response_number: number; thread_id: string }[]
     >`
-        INSERT INTO responses(
-            id,
-            thread_id,
-            response_number,
-            author_name,
-            mail,
-            posted_at,
-            response_content,
-            hash_id,
-            trip
+        WITH target_thread AS (
+            SELECT id
+            FROM threads
+            WHERE id = ${response.threadId.val}::uuid
+              AND board_id = ${boardId}::uuid
+        ),
+        inserted AS (
+            INSERT INTO responses(
+                id,
+                thread_id,
+                response_number,
+                author_name,
+                mail,
+                posted_at,
+                response_content,
+                hash_id,
+                trip
+            )
+            SELECT
+                ${response.id.val}::uuid,
+                target_thread.id,
+                (
+                    SELECT COALESCE(MAX(response_number), 0) + 1
+                    FROM responses
+                    WHERE thread_id = target_thread.id
+                ),
+                ${response.authorName.val.authorName},
+                ${response.mail.val},
+                ${response.postedAt.val},
+                ${response.responseContent.val},
+                ${response.hashId.val},
+                ${trip}
+            FROM target_thread
+            RETURNING id, response_number, thread_id
         )
-        VALUES(
-            ${response.id.val}::uuid,
-            ${response.threadId.val}::uuid,
-            -- レスポンス番号はスレッド内での最大値 + 1
-            (
-                SELECT COALESCE(MAX(response_number), 0) + 1
-                FROM responses
-                WHERE thread_id = ${response.threadId.val}::uuid
-            ),
-            ${response.authorName.val.authorName},
-            ${response.mail.val},
-            ${response.postedAt.val},
-            ${response.responseContent.val},
-            ${response.hashId.val},
-            ${trip}
-        ) RETURNING id, response_number, thread_id
+        SELECT id, response_number, thread_id FROM inserted
       `;
 
     if (!result || result.length !== 1) {

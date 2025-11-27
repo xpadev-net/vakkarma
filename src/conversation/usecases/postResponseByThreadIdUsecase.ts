@@ -1,7 +1,5 @@
 import { err, ok } from "neverthrow";
 
-import { getDefaultAuthorNameRepository } from "../../config/repositories/getDefaultAuthorNameRepository";
-import { getMaxContentLengthRepository } from "../../config/repositories/getMaxContentLengthRepository";
 import { type ReadThreadId } from "../domain/read/ReadThreadId";
 import { createWriteAuthorName } from "../domain/write/WriteAuthorName";
 import { generateWriteHashId } from "../domain/write/WriteHashId";
@@ -13,6 +11,7 @@ import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { createResponseByThreadIdRepository } from "../repositories/createResponseByThreadIdRepository";
 import { updateThreadUpdatedAtRepository } from "../repositories/updateThreadUpdatedAtRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadResponseNumber } from "../domain/read/ReadResponseNumber";
 import type { Result } from "neverthrow";
@@ -20,6 +19,7 @@ import type { Result } from "neverthrow";
 // レスを投稿する際のユースケース
 export const postResponseByThreadIdUsecase = async (
   vakContext: VakContext,
+  boardContext: BoardContext,
   {
     threadIdRaw,
     authorNameRaw,
@@ -80,21 +80,9 @@ export const postResponseByThreadIdUsecase = async (
     async () => {
       logger.debug({
         operation: "postResponseByThreadId",
-        message: "Fetching default author name from config",
+        message: "Using default author name from board context",
       });
-
-      const nanashiNameResult = await getDefaultAuthorNameRepository(
-        vakContext
-      );
-      if (nanashiNameResult.isErr()) {
-        logger.error({
-          operation: "postResponseByThreadId",
-          error: nanashiNameResult.error,
-          message: "Failed to fetch default author name",
-        });
-        return err(nanashiNameResult.error);
-      }
-      return ok(nanashiNameResult.value.val);
+      return ok(boardContext.defaultAuthorName);
     }
   );
   if (authorNameResult.isErr()) {
@@ -137,19 +125,9 @@ export const postResponseByThreadIdUsecase = async (
     async () => {
       logger.debug({
         operation: "postResponseByThreadId",
-        message: "Fetching max content length from config",
+        message: "Using max content length from board context",
       });
-
-      const result = await getMaxContentLengthRepository(vakContext);
-      if (result.isErr()) {
-        logger.error({
-          operation: "postResponseByThreadId",
-          error: result.error,
-          message: "Failed to fetch max content length",
-        });
-        return err(result.error);
-      }
-      return ok(result.value.val);
+      return ok(boardContext.maxContentLength);
     }
   );
   if (responseContentResult.isErr()) {
@@ -215,7 +193,8 @@ export const postResponseByThreadIdUsecase = async (
 
   const responseResult = await createResponseByThreadIdRepository(
     vakContext,
-    response.value
+    response.value,
+    { boardId: boardContext.boardId }
   );
   if (responseResult.isErr()) {
     logger.error({
@@ -241,6 +220,7 @@ export const postResponseByThreadIdUsecase = async (
     const threadResult = await updateThreadUpdatedAtRepository(vakContext, {
       threadId: writeThreadIdResult.value,
       updatedAt: postedAt,
+      boardId: boardContext.boardId,
     });
     if (threadResult.isErr()) {
       logger.error({

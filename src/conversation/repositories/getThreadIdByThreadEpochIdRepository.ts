@@ -9,7 +9,10 @@ import type { Result } from "neverthrow";
 
 export const getThreadIdByThreadEpochIdRepository = async (
   { sql, logger }: VakContext,
-  { threadEpochId }: { threadEpochId: WriteThreadEpochId }
+  {
+    threadEpochId,
+    boardId,
+  }: { threadEpochId: WriteThreadEpochId; boardId: string }
 ): Promise<Result<ReadThreadId, Error>> => {
   logger.debug({
     operation: "getThreadIdByThreadEpochId",
@@ -24,6 +27,8 @@ export const getThreadIdByThreadEpochIdRepository = async (
             threads
         WHERE
             epoch_id = ${threadEpochId.val}
+        AND
+            board_id = ${boardId}::uuid
     `;
   if (!result || result.length !== 1) {
     logger.error({

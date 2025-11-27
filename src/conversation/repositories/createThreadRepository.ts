@@ -29,14 +29,16 @@ export const createThreadRepository = async (
               title,
               posted_at,
               updated_at,
-              epoch_id
+              epoch_id,
+              board_id
           )
           VALUES(
               ${thread.id.val}::uuid,
               ${thread.title.val},
               ${thread.postedAt.val},
               ${thread.updatedAt.val},
-              ${thread.epochId.val}
+              ${thread.epochId.val},
+              ${thread.boardId}::uuid
           ) RETURNING id
       `;
 

@@ -1,7 +1,5 @@
 import { err, ok } from "neverthrow";
 
-import { getDefaultAuthorNameRepository } from "../../config/repositories/getDefaultAuthorNameRepository";
-import { getMaxContentLengthRepository } from "../../config/repositories/getMaxContentLengthRepository";
 import { createWriteAuthorName } from "../domain/write/WriteAuthorName";
 import { generateWriteHashId } from "../domain/write/WriteHashId";
 import { createWriteMail, isSage } from "../domain/write/WriteMail";
@@ -14,6 +12,7 @@ import { createResponseByThreadIdRepository } from "../repositories/createRespon
 import { getThreadIdByThreadEpochIdRepository } from "../repositories/getThreadIdByThreadEpochIdRepository";
 import { updateThreadUpdatedAtRepository } from "../repositories/updateThreadUpdatedAtRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadThreadId } from "../domain/read/ReadThreadId";
 import type { Result } from "neverthrow";
@@ -21,6 +20,7 @@ import type { Result } from "neverthrow";
 // レスを投稿する際のユースケース
 export const postResponseByThreadEpochIdUsecase = async (
   vakContext: VakContext,
+  boardContext: BoardContext,
   {
     threadEpochIdRaw,
     authorNameRaw,
@@ -75,6 +75,7 @@ export const postResponseByThreadEpochIdUsecase = async (
     vakContext,
     {
       threadEpochId: threadEpochIdResult.value,
+      boardId: boardContext.boardId,
     }
   );
   if (readThreadIdResult.isErr()) {
@@ -116,13 +117,7 @@ export const postResponseByThreadEpochIdUsecase = async (
   const authorNameResult = await createWriteAuthorName(
     authorNameRaw,
     async () => {
-      const nanashiNameResult = await getDefaultAuthorNameRepository(
-        vakContext
-      );
-      if (nanashiNameResult.isErr()) {
-        return err(nanashiNameResult.error);
-      }
-      return ok(nanashiNameResult.value.val);
+      return ok(boardContext.defaultAuthorName);
     }
   );
   if (authorNameResult.isErr()) {
@@ -164,11 +159,7 @@ export const postResponseByThreadEpochIdUsecase = async (
   const responseContentResult = await createWriteResponseContent(
     responseContentRaw,
     async () => {
-      const result = await getMaxContentLengthRepository(vakContext);
-      if (result.isErr()) {
-        return err(result.error);
-      }
-      return ok(result.value.val);
+      return ok(boardContext.maxContentLength);
     }
   );
   if (responseContentResult.isErr()) {
@@ -242,7 +233,8 @@ export const postResponseByThreadEpochIdUsecase = async (
 
   const responseResult = await createResponseByThreadIdRepository(
     vakContext,
-    response.value
+    response.value,
+    { boardId: boardContext.boardId }
   );
   if (responseResult.isErr()) {
     logger.error({
@@ -266,6 +258,7 @@ export const postResponseByThreadEpochIdUsecase = async (
     const threadResult = await updateThreadUpdatedAtRepository(vakContext, {
       threadId: writeThreadIdResult.value,
       updatedAt: postedAt,
+      boardId: boardContext.boardId,
     });
     if (threadResult.isErr()) {
       logger.error({

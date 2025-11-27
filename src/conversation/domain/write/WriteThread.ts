@@ -15,6 +15,7 @@ export type WriteThread = {
   readonly title: WriteThreadTitle;
   readonly postedAt: WritePostedAt;
   readonly epochId: WriteThreadEpochId;
+  readonly boardId: string;
   // 返信時、updatedAtも更新される
   // このときの動作は専用のリポジトリを実装してしまうことにする
   // (少しお行儀が悪いかも)
@@ -26,10 +27,16 @@ export type WriteThread = {
 export const createWriteThread = ({
   title,
   postedAt,
+  boardId,
 }: {
   title: WriteThreadTitle;
   postedAt: WritePostedAt;
+  boardId: string;
 }): Result<WriteThread, Error> => {
+  if (!boardId) {
+    return err(new Error("板IDが不正です"));
+  }
+
   const id = generateWriteThreadId();
 
   const threadEpochIdResult = generateWriteThreadEpochId(postedAt);
@@ -46,5 +53,6 @@ export const createWriteThread = ({
     postedAt,
     updatedAt,
     epochId: threadEpochIdResult.value,
+    boardId,
   });
 };
