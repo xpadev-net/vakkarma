@@ -21,15 +21,29 @@ export const updateNormalConfigRepository = async (
   });
 
   try {
-    await sql`
+    const result = await sql<{ id: string }[]>`
             UPDATE
-                config
+                boards
             SET
                 board_name = ${boardName.val},
                 local_rule = ${localRule.val},
                 nanashi_name = ${defaultAuthorName.val},
-                max_content_length = ${maxContentLength.val}
+                max_content_length = ${maxContentLength.val},
+                updated_at = NOW()
+            WHERE
+                id = (
+                    SELECT default_board_id FROM app_settings WHERE id = 1
+                )
+            RETURNING id
         `;
+
+    if (!result || result.length !== 1) {
+      logger.error({
+        operation: "updateNormalConfig",
+        message: "Failed to update default board row",
+      });
+      return err(new DatabaseError("設定の更新に失敗しました"));
+    }
 
     logger.info({
       operation: "updateNormalConfig",

@@ -13,10 +13,10 @@ import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadThreadWithEpochId } from "../domain/read/ReadThreadWithEpochId";
 
 // すべてのスレッドを取得するだけのリポジトリ
-export const getAllThreadsWithEpochIdRepository = async ({
-  sql,
-  logger,
-}: VakContext): Promise<
+export const getAllThreadsWithEpochIdRepository = async (
+  { sql, logger }: VakContext,
+  { boardId }: { boardId: string }
+): Promise<
   Result<
     ReadThreadWithEpochId[],
     DatabaseError | DataNotFoundError | ValidationError
@@ -24,6 +24,7 @@ export const getAllThreadsWithEpochIdRepository = async ({
 > => {
   logger.debug({
     operation: "getAllThreadsWithEpochId",
+    boardId,
     message: "Fetching all threads with epoch IDs",
   });
 
@@ -50,6 +51,8 @@ export const getAllThreadsWithEpochIdRepository = async ({
               LEFT JOIN
                   responses as r
               ON  t.id = r.thread_id
+          WHERE
+              t.board_id = ${boardId}::uuid
           GROUP BY
               t.id,
               t.title

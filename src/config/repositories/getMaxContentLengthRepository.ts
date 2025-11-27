@@ -1,11 +1,9 @@
 import { err, ok } from "neverthrow";
 
-import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
-import {
-  createReadMaxContentLength,
-  type ReadMaxContentLength,
-} from "../domain/read/ReadMaxContentLength";
+import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
+import { type ReadMaxContentLength } from "../domain/read/ReadMaxContentLength";
 
+import type { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { Result } from "neverthrow";
 
@@ -13,60 +11,29 @@ export const getMaxContentLengthRepository = async ({
   sql,
   logger,
 }: VakContext): Promise<
-  Result<ReadMaxContentLength, DatabaseError | DataNotFoundError>
+  Result<ReadMaxContentLength, DatabaseError | DataNotFoundError | Error>
 > => {
   logger.debug({
     operation: "getMaxContentLength",
     message: "Fetching maximum content length from database",
   });
 
-  try {
-    const result = await sql<{ max_content_length: number }[]>`
-        SELECT max_content_length FROM config LIMIT 1
-      `;
-    if (!result || result.length !== 1) {
-      logger.error({
-        operation: "getMaxContentLength",
-        message:
-          "Failed to retrieve maximum content length, invalid database response",
-      });
-      return err(new DataNotFoundError("設定の取得に失敗しました"));
-    }
+  const boardResult = await getDefaultBoardRepository({ sql, logger });
 
-    logger.debug({
-      operation: "getMaxContentLength",
-      maxContentLength: result[0].max_content_length,
-      message: "Maximum content length retrieved from database",
-    });
-
-    const maxContentLengthResult = createReadMaxContentLength(
-      result[0].max_content_length
-    );
-    if (maxContentLengthResult.isErr()) {
-      logger.error({
-        operation: "getMaxContentLength",
-        error: maxContentLengthResult.error,
-        message: "Invalid maximum content length format",
-      });
-      return err(maxContentLengthResult.error);
-    }
-
-    logger.info({
-      operation: "getMaxContentLength",
-      maxContentLength: maxContentLengthResult.value.val,
-      message: "Maximum content length retrieved and validated successfully",
-    });
-
-    return ok(maxContentLengthResult.value);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+  if (boardResult.isErr()) {
     logger.error({
       operation: "getMaxContentLength",
-      error,
-      message: `Database error while fetching maximum content length: ${message}`,
+      error: boardResult.error,
+      message: "Failed to fetch default board information",
     });
-    return err(
-      new DatabaseError(`設定取得中にエラーが発生しました: ${message}`, error)
-    );
+    return err(boardResult.error);
   }
+
+  logger.info({
+    operation: "getMaxContentLength",
+    maxContentLength: boardResult.value.maxContentLength.val,
+    message: "Maximum content length retrieved and validated successfully",
+  });
+
+  return ok(boardResult.value.maxContentLength);
 };

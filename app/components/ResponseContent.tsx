@@ -95,7 +95,7 @@ const processInlineDecorations = (text: string): (string | JSX.Element)[] => {
 
 // --- ResponseLineComponent ---
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const ResponseLineComponent: FC<{
   line: string;
   threadId: ReadThreadId;
@@ -171,7 +171,7 @@ export const ResponseLineComponent: FC<{
 
 // --- ResponseContentComponent ---
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const ResponseContentComponent: FC<{
   threadId: ReadThreadId;
   responseContent: ReadResponseContent;

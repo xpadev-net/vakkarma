@@ -3,11 +3,13 @@ import { err, ok } from "neverthrow";
 import { createWriteThreadEpochId } from "../domain/write/WriteThreadEpochId";
 import { getAllResponsesByThreadEpochIdRepository } from "../repositories/getAllResponsesByThreadEpochIdRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 
 // スレッドについているレスをすべて確認するユースケース
 export const getAllResponsesByThreadEpochIdUsecase = async (
   vakContext: VakContext,
+  boardContext: BoardContext,
   { threadEpochIdRaw }: { threadEpochIdRaw: string }
 ) => {
   const { logger } = vakContext;
@@ -46,6 +48,7 @@ export const getAllResponsesByThreadEpochIdUsecase = async (
   const responsesWithThreadResult =
     await getAllResponsesByThreadEpochIdRepository(vakContext, {
       threadEpochId: threadEpochId.value,
+      boardId: boardContext.boardId,
     });
   if (responsesWithThreadResult.isErr()) {
     logger.error({

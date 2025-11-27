@@ -28,7 +28,7 @@ import type { WriteThreadId } from "../domain/write/WriteThreadId";
 // 便宜上、スレッドタイトルも取得する
 export const getAllResponsesByThreadIdRepository = async (
   { sql, logger }: VakContext,
-  { threadId }: { threadId: WriteThreadId }
+  { threadId, boardId }: { threadId: WriteThreadId; boardId: string }
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -81,6 +81,7 @@ export const getAllResponsesByThreadIdRepository = async (
       JOIN resp_count AS rc
         ON rc.thread_id = r.thread_id
       WHERE r.thread_id = ${threadId.val}::uuid
+        AND t.board_id = ${boardId}::uuid
       ORDER BY r.response_number
     `;
 

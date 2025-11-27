@@ -22,7 +22,7 @@ export const getPasswordHashRepository = async ({
 
   try {
     const result = await sql<{ admin_password: string }[]>`
-        SELECT admin_password FROM config LIMIT 1
+        SELECT admin_password FROM app_settings WHERE id = 1
       `;
 
     if (!result || result.length !== 1) {

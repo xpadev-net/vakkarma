@@ -1,6 +1,6 @@
 import ErrorRedirect from "../islands/ErrorRedirect"; // Import the island
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const ErrorMessage = ({ error }: { error: Error }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

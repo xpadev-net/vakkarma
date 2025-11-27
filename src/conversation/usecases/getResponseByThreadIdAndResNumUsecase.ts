@@ -4,11 +4,13 @@ import { createWriteResponseNumber } from "../domain/write/WriteResponseNumber";
 import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { getResponseByThreadIdAndResNumRepository } from "../repositories/getResponseByThreadIdAndResNumRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 
 // スレッドの特定のレス番号のレスポンスを取得するユースケース
 export const getResponseByThreadIdAndResNumUsecase = async (
   vakContext: VakContext,
+  boardContext: BoardContext,
   {
     threadIdRaw,
     responseNumberRaw,
@@ -72,6 +74,7 @@ export const getResponseByThreadIdAndResNumUsecase = async (
     {
       threadId: threadIdResult.value,
       responseNumber: responseNumberResult.value,
+      boardId: boardContext.boardId,
     }
   );
   if (responseResult.isErr()) {

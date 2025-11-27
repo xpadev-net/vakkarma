@@ -1,7 +1,7 @@
 import { ok, err } from "neverthrow";
 import { Result } from "neverthrow";
 
-import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import { DatabaseError } from "../../shared/types/Error";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -15,7 +15,7 @@ import { createReadResponseId } from "../domain/read/ReadResponseId";
 import { createReadResponseNumber } from "../domain/read/ReadResponseNumber";
 import { createReadThreadId } from "../domain/read/ReadThreadId";
 
-import type { ValidationError } from "../../shared/types/Error";
+import type { DataNotFoundError, ValidationError } from "../../shared/types/Error";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
@@ -140,7 +140,7 @@ export const getLatest10ThreadsWithResponsesRepository = async (
         threadIds: threadIdRaw,
         message: "No responses found for the specified threads",
       });
-      return err(new DataNotFoundError("レスポンスの取得に失敗しました"));
+      return ok([]);
     }
 
     logger.debug({

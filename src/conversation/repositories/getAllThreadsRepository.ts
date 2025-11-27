@@ -11,10 +11,10 @@ import type { ValidationError } from "../../shared/types/Error";
 import type { VakContext } from "../../shared/types/VakContext";
 
 // すべてのスレッドを取得するだけのリポジトリ
-export const getAllThreadsRepository = async ({
-  sql,
-  logger,
-}: VakContext): Promise<
+export const getAllThreadsRepository = async (
+  { sql, logger }: VakContext,
+  { boardId }: { boardId: string }
+): Promise<
   Result<ReadThread[], DatabaseError | DataNotFoundError | ValidationError>
 > => {
   logger.debug({
@@ -43,7 +43,9 @@ export const getAllThreadsRepository = async ({
               LEFT JOIN
                   responses as r
               ON  t.id = r.thread_id
-          GROUP BY
+        WHERE
+            t.board_id = ${boardId}::uuid
+        GROUP BY
               t.id,
               t.title
           ORDER BY

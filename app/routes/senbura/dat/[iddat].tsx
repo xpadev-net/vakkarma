@@ -4,6 +4,7 @@ import { formatReadAuthorName } from "../../../../src/conversation/domain/read/R
 import { getAllResponsesByThreadEpochIdUsecase } from "../../../../src/conversation/usecases/getAllResponsesByThreadEpochIdUsecase";
 import { formatDate } from "../../../../src/shared/utils/formatDate";
 import { convertShiftJis } from "../../../utils/convertShiftJis";
+import { resolveBoardContext } from "../../../utils/getBoardContext";
 
 export default createRoute(async (c) => {
   const { sql, logger } = c.var;
@@ -20,8 +21,18 @@ export default createRoute(async (c) => {
     return convertShiftJis("スレッドIDが指定されていません");
   }
 
+  const vakContext = { sql, logger };
+  const boardSlug = c.req.param("boardSlug");
+  const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
+  if (boardContextResult.isErr()) {
+    return convertShiftJis(
+      `エラーが発生しました: ${boardContextResult.error.message}`
+    );
+  }
+
   const responsesResult = await getAllResponsesByThreadEpochIdUsecase(
-    { sql, logger },
+    vakContext,
+    boardContextResult.value,
     { threadEpochIdRaw: id }
   );
   if (responsesResult.isErr()) {

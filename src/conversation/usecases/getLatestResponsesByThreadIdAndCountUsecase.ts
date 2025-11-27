@@ -4,11 +4,13 @@ import { createWriteResponseNumber } from "../domain/write/WriteResponseNumber";
 import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { getLatestResponsesByThreadIdAndCountRepository } from "../repositories/getLatestResponsesByThreadIdAndCountRepository";
 
+import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 
 // スレッドについている最新のレスを指定件数取得するユースケース
 export const getLatestResponsesByThreadIdAndCountUsecase = async (
   vakContext: VakContext,
+  boardContext: BoardContext,
   { threadIdRaw, countRaw }: { threadIdRaw: string; countRaw: number }
 ) => {
   const { logger } = vakContext;
@@ -68,6 +70,7 @@ export const getLatestResponsesByThreadIdAndCountUsecase = async (
     await getLatestResponsesByThreadIdAndCountRepository(vakContext, {
       threadId: threadIdResult.value,
       count: countResult.value,
+      boardId: boardContext.boardId,
     });
   if (responsesWithThreadResult.isErr()) {
     logger.error({

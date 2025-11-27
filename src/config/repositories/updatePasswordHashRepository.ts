@@ -18,9 +18,11 @@ export const updatePasswordHashRepository = async (
   try {
     await sql`
     UPDATE
-        config
+        app_settings
     SET
         admin_password = ${passwordHash.val}
+    WHERE
+        id = 1
     `;
 
     logger.info({

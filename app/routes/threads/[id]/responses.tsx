@@ -2,12 +2,15 @@ import { createRoute } from "honox/factory";
 
 import { postResponseByThreadIdUsecase } from "../../../../src/conversation/usecases/postResponseByThreadIdUsecase";
 import { ErrorMessage } from "../../../components/ErrorMessage";
+import { resolveBoardContext } from "../../../utils/getBoardContext";
 import { getIpAddress } from "../../../utils/getIpAddress";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
+  const vakContext = { sql, logger };
   const id = c.req.param("id");
+  const boardSlug = c.req.param("boardSlug");
 
   logger.info({
     operation: "threads/[id]/responses/POST",
@@ -69,8 +72,19 @@ export const POST = createRoute(async (c) => {
     message: "Calling postResponseByThreadIdUsecase",
   });
 
+  const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
+  if (boardContextResult.isErr()) {
+    logger.error({
+      operation: "threads/[id]/responses/POST",
+      error: boardContextResult.error,
+      message: "Failed to resolve board context",
+    });
+    return c.render(<ErrorMessage error={boardContextResult.error} />);
+  }
+
   const responseResult = await postResponseByThreadIdUsecase(
-    { sql, logger },
+    vakContext,
+    boardContextResult.value,
     {
       threadIdRaw: id,
       authorNameRaw: name,
@@ -97,11 +111,16 @@ export const POST = createRoute(async (c) => {
 
   const { threadId } = responseResult.value;
 
-  return c.redirect(`/threads/${threadId.val}/l10`, 303);
+  const redirectBase = boardSlug
+    ? `/boards/${boardSlug}`
+    : `/boards/${boardContextResult.value.slug}`;
+
+  return c.redirect(`${redirectBase}/threads/${threadId.val}/l10`, 303);
 });
 
 export default createRoute((c) => {
   const { logger } = c.var;
+  const boardSlug = c.req.param("boardSlug");
 
   logger.warn({
     operation: "threads/[id]/responses/GET",
@@ -109,6 +128,10 @@ export default createRoute((c) => {
     method: c.req.method,
     message: "Invalid method for response endpoint, GET method not supported",
   });
+
+  if (boardSlug) {
+    return c.redirect(`/boards/${boardSlug}`, 302);
+  }
 
   return c.render(
     <ErrorMessage error={new Error("POSTメソッドでアクセスしてください")} />

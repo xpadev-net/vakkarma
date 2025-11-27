@@ -5,6 +5,7 @@ import iconv from "iconv-lite";
 import { postResponseByThreadEpochIdUsecase } from "../../../src/conversation/usecases/postResponseByThreadEpochIdUsecase";
 import { postThreadUsecase } from "../../../src/conversation/usecases/postThreadUsecase";
 import { convertShiftJis } from "../../utils/convertShiftJis";
+import { resolveBoardContext } from "../../utils/getBoardContext";
 import { getIpAddress } from "../../utils/getIpAddress";
 
 const responseBody = `
@@ -21,12 +22,21 @@ const responseBody = `
 
 const responseBodyShiftJis = iconv.encode(responseBody, "Shift_JIS");
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   if (!sql) {
     return convertShiftJis("DBに接続できませんでした");
   }
+
+  const vakContext = { sql, logger };
+  const boardSlug = c.req.param("boardSlug");
+
+  const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
+  if (boardContextResult.isErr()) {
+    return convertShiftJis(`エラーが発生しました: ${boardContextResult.error.message}`);
+  }
+  const boardContext = boardContextResult.value;
 
   // Shift_JIS でエンコードされたフォームデータを受け取る
   const rawBody = await c.req.arrayBuffer();
@@ -76,7 +86,8 @@ export const POST = createRoute(async (c) => {
   // subjectがある場合→新規スレッド作成
   if (subject) {
     const result = await postThreadUsecase(
-      { sql, logger },
+      vakContext,
+      boardContext,
       {
         threadTitleRaw: subject,
         authorNameRaw: name,
@@ -96,7 +107,8 @@ export const POST = createRoute(async (c) => {
     // keyがある場合→レスポンス追加
   } else if (key) {
     const result = await postResponseByThreadEpochIdUsecase(
-      { sql, logger },
+      vakContext,
+      boardContext,
       {
         threadEpochIdRaw: key,
         authorNameRaw: name,

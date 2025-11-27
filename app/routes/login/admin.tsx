@@ -49,7 +49,7 @@ export default createRoute(async (c) => {
   );
 });
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   if (!sql) {
