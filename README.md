@@ -142,6 +142,14 @@ Vite が 80 ポートで起動します。
 
 なお、他のポートで動作させる場合や一般公開が必要ない場合は、`vite.config.ts`を編集してください。
 
+## リリースフロー
+
+1. GitHub の Actions タブから `Release` ワークフローを開き、`Run workflow` をクリックします。
+2. `release_type` で `patch` / `minor` / `major` のいずれかを選択し、必要に応じて `release_notes` を入力します。
+3. ワークフロー実行後、`scripts/next-version.cjs` が `package.json` のバージョンを更新し、`pnpm-lock.yaml` をロックファイルとして再生成します。
+4. 更新内容は `chore(release): vX.Y.Z` というコミットと `vX.Y.Z` タグとして `main` にプッシュされ、同名の GitHub Release が作成されます。
+5. Release 作成後に `build-app` ジョブが続き、`Dockerfile.app` を Buildx 経由でビルドしてアーティファクトを検証できます。イメージをレジストリへ公開したい場合はこのジョブにログイン／プッシュ処理を追加してください。
+
 ## 使い方
 
 VakKarma では、すべての画面がレスポンシブデザインに対応しています。
