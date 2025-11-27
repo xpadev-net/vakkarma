@@ -21,6 +21,9 @@ permissions:
   contents: write
   packages: write
 
+env:
+  IMAGE_NAME: ${{ github.event.repository.name }}
+
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
