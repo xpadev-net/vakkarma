@@ -66,6 +66,8 @@ export const createBoardUsecase = async (
       ? orderIndexRaw
       : 0;
 
+  const shouldSetDefault = isDefault;
+
   const boardResult = createWriteBoard({
     id: generateWriteBoardId(),
     slug,
@@ -75,7 +77,7 @@ export const createBoardUsecase = async (
     maxContentLength,
     orderIndex,
     isActive: true,
-    isDefault,
+    isDefault: false,
   });
 
   if (boardResult.isErr()) {
@@ -87,7 +89,7 @@ export const createBoardUsecase = async (
     return err(createdResult.error);
   }
 
-  if (!isDefault) {
+  if (!shouldSetDefault) {
     return ok(createdResult.value);
   }
 
