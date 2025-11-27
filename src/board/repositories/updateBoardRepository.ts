@@ -7,9 +7,9 @@ import {
 
 import { mapBoardRecordToDomain } from "./boardRecordMapper";
 
+import type { BoardRecord } from "./boardRecordMapper";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
-import type { BoardRecord } from "./boardRecordMapper";
 
 export const updateBoardRepository = async (
   { sql, logger }: VakContext,

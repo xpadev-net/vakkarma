@@ -4,10 +4,10 @@ import { DatabaseError } from "../../shared/types/Error";
 
 import { mapBoardRecordToDomain } from "./boardRecordMapper";
 
+import type { BoardRecord } from "./boardRecordMapper";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
 import type { WriteBoard } from "../domain/write/WriteBoard";
-import type { BoardRecord } from "./boardRecordMapper";
 
 export const createBoardRepository = async (
   { sql, logger }: VakContext,
