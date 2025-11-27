@@ -1,13 +1,13 @@
 import { ok, err } from "neverthrow";
 import { Result } from "neverthrow";
 
-import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import { DatabaseError } from "../../shared/types/Error";
 import { createReadPostedAt } from "../domain/read/ReadPostedAt";
 import { createReadThread, type ReadThread } from "../domain/read/ReadThread";
 import { createReadThreadId } from "../domain/read/ReadThreadId";
 import { createReadThreadTitle } from "../domain/read/ReadThreadTitle";
 
-import type { ValidationError } from "../../shared/types/Error";
+import type { DataNotFoundError, ValidationError } from "../../shared/types/Error";
 import type { VakContext } from "../../shared/types/VakContext";
 
 // updated_atが新しい順に30個のスレッドを取得
@@ -61,7 +61,7 @@ export const getLatest30ThreadsRepository = async (
         operation: "getLatest30Threads",
         message: "No threads found in database",
       });
-      return err(new DataNotFoundError("スレッドの取得に失敗しました"));
+      return ok([]);
     }
 
     logger.debug({

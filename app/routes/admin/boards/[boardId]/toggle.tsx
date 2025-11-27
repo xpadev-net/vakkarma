@@ -18,7 +18,15 @@ export const POST = createRoute(async (c) => {
   }
 
   const body = await c.req.parseBody();
-  const nextState = body.nextState;
+  const nextState =
+    typeof body.nextState === "string" ? body.nextState.toLowerCase() : null;
+
+  if (nextState !== "inactive" && nextState !== "active") {
+    return c.render(
+      <ErrorMessage error={new Error("nextState が不正です")} />
+    );
+  }
+
   const isActive = nextState !== "inactive";
 
   const result = await setBoardActiveStateUsecase(

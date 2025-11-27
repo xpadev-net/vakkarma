@@ -19,24 +19,59 @@ export const POST = createRoute(async (c) => {
 
   const body = await c.req.parseBody();
 
-  const slug = typeof body.slug === "string" ? body.slug : "";
-  const boardName = typeof body.boardName === "string" ? body.boardName : "";
-  const localRule = typeof body.localRule === "string" ? body.localRule : "";
-  const nanashiName =
-    typeof body.nanashiName === "string" ? body.nanashiName : "";
-  const maxContentLength = Number(body.maxContentLength);
-  const orderIndex =
-    typeof body.orderIndex === "string" && body.orderIndex.length > 0
-      ? Number(body.orderIndex)
+  const slugRaw = typeof body.slug === "string" ? body.slug.trim() : "";
+  const boardNameRaw =
+    typeof body.boardName === "string" ? body.boardName.trim() : "";
+  const localRuleRaw =
+    typeof body.localRule === "string" ? body.localRule.trim() : "";
+  const nanashiNameRaw =
+    typeof body.nanashiName === "string" ? body.nanashiName.trim() : "";
+  const maxLengthRaw =
+    typeof body.maxContentLength === "string"
+      ? body.maxContentLength.trim()
+      : "";
+  const orderIndexRaw =
+    typeof body.orderIndex === "string" && body.orderIndex.trim().length > 0
+      ? body.orderIndex.trim()
       : undefined;
+
+  if (
+    !slugRaw ||
+    !boardNameRaw ||
+    !localRuleRaw ||
+    !nanashiNameRaw ||
+    !maxLengthRaw
+  ) {
+    return c.render(
+      <ErrorMessage error={new Error("すべての必須項目を入力してください")} />
+    );
+  }
+
+  const maxContentLength = Number(maxLengthRaw);
+  if (!Number.isFinite(maxContentLength) || maxContentLength <= 0) {
+    return c.render(
+      <ErrorMessage error={new Error("最大文字数は正の数で入力してください")} />
+    );
+  }
+
+  const orderIndex =
+    orderIndexRaw !== undefined ? Number(orderIndexRaw) : undefined;
+  if (
+    orderIndexRaw !== undefined &&
+    (Number.isNaN(orderIndex) || !Number.isFinite(orderIndex))
+  ) {
+    return c.render(
+      <ErrorMessage error={new Error("並び順は数値で入力してください")} />
+    );
+  }
 
   const vakContext = { sql, logger };
   const result = await updateBoardUsecase(vakContext, {
     boardId,
-    slugRaw: slug,
-    boardNameRaw: boardName,
-    localRuleRaw: localRule,
-    defaultAuthorNameRaw: nanashiName,
+    slugRaw,
+    boardNameRaw,
+    localRuleRaw,
+    defaultAuthorNameRaw: nanashiNameRaw,
     maxContentLengthRaw: maxContentLength,
     orderIndexRaw: orderIndex,
   });
