@@ -23,7 +23,7 @@ export default createRoute(async (c) => {
     });
     c.status(500);
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -46,7 +46,7 @@ export default createRoute(async (c) => {
   if (!boardSlug) {
     return c.redirect(
       `/boards/${boardContextResult.value.slug}/threads/${id}`,
-      302
+      302,
     );
   }
 
@@ -100,6 +100,6 @@ export default createRoute(async (c) => {
       responses={allResponsesResult.value.responses}
       latestResponseNumber={latestResponseNumber}
       acceptLanguage={c.req.header("Accept-Language") ?? undefined}
-    />
+    />,
   );
 });

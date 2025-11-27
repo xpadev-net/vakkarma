@@ -1,11 +1,10 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
+import type { ValidationError } from "../../../shared/types/Error";
 import type { WriteBoardName } from "./WriteBoardName";
 import type { WriteDefaultAuthorName } from "./WriteDefaultAuthorName";
 import type { WriteLocalRule } from "./WriteLocalRule";
 import type { WriteMaxContentLength } from "./WriteMaxContentLength";
-import type { ValidationError } from "../../../shared/types/Error";
-import type { Result } from "neverthrow";
 
 export type WriteNormalConfig = {
   readonly _type: "WriteNormalConfig";

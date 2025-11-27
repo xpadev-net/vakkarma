@@ -1,14 +1,16 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
 import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
+
+import type {
+  DatabaseError,
+  DataNotFoundError,
+} from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import {
   createReadBoardConfig,
   type ReadBoardConfig,
 } from "../domain/read/ReadBoardConfig";
-
-import type { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
-import type { Result } from "neverthrow";
 
 export const getBoardConfigRepository = async ({
   sql,

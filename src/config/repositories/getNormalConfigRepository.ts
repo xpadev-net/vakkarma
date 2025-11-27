@@ -1,15 +1,13 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-
 import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
+
+import type { DatabaseError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import {
   createReadNormalConfig,
   type ReadNormalConfig,
 } from "../domain/read/ReadNormalConfig";
-
-import type { DatabaseError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
-import type { Result } from "neverthrow";
 
 export const getNormalConfigRepository = async ({
   sql,

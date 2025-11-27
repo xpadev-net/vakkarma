@@ -1,14 +1,12 @@
 import { err, ok, type Result } from "neverthrow";
-
+import type { VakContext } from "../../shared/types/VakContext";
+import type { ReadBoard } from "../domain/read/ReadBoard";
 import { getBoardByIdRepository } from "../repositories/getBoardByIdRepository";
 import { setDefaultBoardRepository } from "../repositories/setDefaultBoardRepository";
 
-import type { VakContext } from "../../shared/types/VakContext";
-import type { ReadBoard } from "../domain/read/ReadBoard";
-
 export const setDefaultBoardUsecase = async (
   vakContext: VakContext,
-  boardId: string
+  boardId: string,
 ): Promise<Result<ReadBoard, Error>> => {
   const boardResult = await getBoardByIdRepository(vakContext, boardId);
   if (boardResult.isErr()) {
@@ -26,4 +24,3 @@ export const setDefaultBoardUsecase = async (
 
   return ok(updateResult.value);
 };
-

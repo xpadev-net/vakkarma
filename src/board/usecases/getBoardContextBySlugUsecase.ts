@@ -1,16 +1,13 @@
-import { err, ok } from "neverthrow";
-
-import { getBoardBySlugRepository } from "../repositories/getBoardBySlugRepository";
-
-import { boardToContext } from "./getDefaultBoardContextUsecase";
-
-import type { VakContext } from "../../shared/types/VakContext";
-import type { BoardContext } from "../types/BoardContext";
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import type { VakContext } from "../../shared/types/VakContext";
+import { getBoardBySlugRepository } from "../repositories/getBoardBySlugRepository";
+import type { BoardContext } from "../types/BoardContext";
+import { boardToContext } from "./getDefaultBoardContextUsecase";
 
 export const getBoardContextBySlugUsecase = async (
   vakContext: VakContext,
-  slug: string
+  slug: string,
 ): Promise<Result<BoardContext, Error>> => {
   const boardResult = await getBoardBySlugRepository(vakContext, slug);
 
@@ -20,4 +17,3 @@ export const getBoardContextBySlugUsecase = async (
 
   return ok(boardToContext(boardResult.value));
 };
-

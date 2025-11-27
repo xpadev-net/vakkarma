@@ -8,7 +8,7 @@ export type ReadResponseContent = {
   readonly val: string;
 };
 export const createReadResponseContent = (
-  value: string
+  value: string,
 ): Result<ReadResponseContent, ValidationError> => {
   return ok({ _type: "ReadResponseContent", val: value });
 };

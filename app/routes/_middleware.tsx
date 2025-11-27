@@ -1,11 +1,11 @@
 import { logger } from "hono/logger";
-import { pinoLogger, type PinoLogger } from "hono-pino";
+import { type PinoLogger, pinoLogger } from "hono-pino";
 import { createRoute } from "honox/factory";
 
 import { csrf } from "../middlewares/csrfMiddleware";
 import {
-  dbClientMiddlewareConditional,
   type DbClient,
+  dbClientMiddlewareConditional,
 } from "../middlewares/dbInitializeMiddleware";
 
 // CSRF許可オリジンは環境変数で上書きし、未設定なら従来どおり自動判定
@@ -33,7 +33,7 @@ export default createRoute(
   dbClientMiddlewareConditional({
     envKey: "DATABASE_URL",
     contextKey: "sql",
-  })
+  }),
 );
 
 declare module "hono" {

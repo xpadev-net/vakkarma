@@ -1,6 +1,5 @@
-import { ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { ok } from "neverthrow";
 
 export type ReadResponseNumber = {
   readonly _type: "ReadResponseNumber";
@@ -8,7 +7,7 @@ export type ReadResponseNumber = {
 };
 
 export const createReadResponseNumber = (
-  value: number
+  value: number,
 ): Result<ReadResponseNumber, Error> => {
   return ok({
     _type: "ReadResponseNumber",

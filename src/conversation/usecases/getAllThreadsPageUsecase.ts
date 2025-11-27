@@ -1,14 +1,12 @@
 import { err, ok } from "neverthrow";
-
-import { getAllThreadsRepository } from "../repositories/getAllThreadsRepository";
-
 import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
+import { getAllThreadsRepository } from "../repositories/getAllThreadsRepository";
 
 // すべてのスレッドを取得するユースケース
 export const getAllThreadsPageUsecase = async (
   vakContext: VakContext,
-  boardContext: BoardContext
+  boardContext: BoardContext,
 ) => {
   const { logger } = vakContext;
 

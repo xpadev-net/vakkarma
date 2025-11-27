@@ -1,8 +1,7 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
 import type { ReadBoardName } from "./ReadBoardName";
 import type { ReadLocalRule } from "./ReadLocalRule";
-import type { Result } from "neverthrow";
 
 export type ReadBoardConfig = {
   readonly _type: "ReadBoardConfig";

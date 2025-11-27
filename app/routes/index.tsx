@@ -49,7 +49,7 @@ export default createRoute(async (c) => {
 
   const usecaseResult = await getTopPageUsecase(
     vakContext,
-    boardContextResult.value
+    boardContextResult.value,
   );
 
   if (usecaseResult.isErr()) {
@@ -77,6 +77,6 @@ export default createRoute(async (c) => {
       threadTop30={threadTop30}
       responsesTop10={responsesTop10}
       acceptLanguage={c.req.header("Accept-Language") ?? undefined}
-    />
+    />,
   );
 });

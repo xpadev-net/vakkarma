@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteDefaultAuthorName } from "./WriteDefaultAuthorName";
 
@@ -17,26 +17,26 @@ describe("WriteDefaultAuthorName", () => {
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.message).toBe(
-        "デフォルトのユーザ名を入力してください"
+        "デフォルトのユーザ名を入力してください",
       );
     }
   });
 
   it("20文字を超える場合はエラーになること", () => {
     const result = createWriteDefaultAuthorName(
-      "あいうえおかきくけこさしすせそたちつてとな"
+      "あいうえおかきくけこさしすせそたちつてとな",
     ); // 21文字
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.message).toBe(
-        "デフォルトのユーザ名は20文字以内で入力してください"
+        "デフォルトのユーザ名は20文字以内で入力してください",
       );
     }
   });
 
   it("ちょうど20文字の場合は作成できること", () => {
     const result = createWriteDefaultAuthorName(
-      "あいうえおかきくけこさしすせそたちつてと"
+      "あいうえおかきくけこさしすせそたちつてと",
     ); // 20文字
     expect(result.isOk()).toBe(true);
   });

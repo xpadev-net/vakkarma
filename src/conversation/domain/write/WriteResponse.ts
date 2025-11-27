@@ -1,15 +1,13 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-import { generateResponseId } from "./WriteResponseId";
-import { createWriteThreadId, type WriteThreadId } from "./WriteThreadId";
-
 import type { WriteAuthorName } from "./WriteAuthorName";
 import type { WriteHashId } from "./WriteHashId";
 import type { WriteMail } from "./WriteMail";
 import type { WritePostedAt } from "./WritePostedAt";
 import type { WriteResponseContent } from "./WriteResponseContent";
 import type { WriteResponseId } from "./WriteResponseId";
-import type { Result } from "neverthrow";
+import { generateResponseId } from "./WriteResponseId";
+import { createWriteThreadId, type WriteThreadId } from "./WriteThreadId";
 
 export type WriteResponse = {
   readonly _type: "WriteResponse";

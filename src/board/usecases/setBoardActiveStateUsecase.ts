@@ -1,10 +1,8 @@
 import { err, ok, type Result } from "neverthrow";
-
-import { getBoardByIdRepository } from "../repositories/getBoardByIdRepository";
-import { updateBoardActiveStateRepository } from "../repositories/updateBoardActiveStateRepository";
-
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import { getBoardByIdRepository } from "../repositories/getBoardByIdRepository";
+import { updateBoardActiveStateRepository } from "../repositories/updateBoardActiveStateRepository";
 
 export const setBoardActiveStateUsecase = async (
   vakContext: VakContext,
@@ -14,7 +12,7 @@ export const setBoardActiveStateUsecase = async (
   }: {
     boardId: string;
     isActive: boolean;
-  }
+  },
 ): Promise<Result<ReadBoard, Error>> => {
   const boardResult = await getBoardByIdRepository(vakContext, boardId);
   if (boardResult.isErr()) {
@@ -36,4 +34,3 @@ export const setBoardActiveStateUsecase = async (
 
   return ok(updateResult.value);
 };
-

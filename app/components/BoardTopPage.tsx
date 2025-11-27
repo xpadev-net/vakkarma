@@ -1,17 +1,14 @@
-
+import type { FC } from "hono/jsx";
+import type { BoardContext } from "../../src/board/types/BoardContext";
 import { formatReadAuthorName } from "../../src/conversation/domain/read/ReadAuthorName";
+import type { ReadResponse } from "../../src/conversation/domain/read/ReadResponse";
+import type { ReadThread } from "../../src/conversation/domain/read/ReadThread";
 import { isSage } from "../../src/conversation/domain/write/WriteMail";
 import { formatDate } from "../../src/shared/utils/formatDate";
 import FormEnhance from "../islands/FormEnhance";
-
 import { BoardLayout } from "./BoardLayout";
-import { ResponseContentComponent } from "./ResponseContent";
-
 import type { BoardLink } from "./boardTypes";
-import type { BoardContext } from "../../src/board/types/BoardContext";
-import type { ReadResponse } from "../../src/conversation/domain/read/ReadResponse";
-import type { ReadThread } from "../../src/conversation/domain/read/ReadThread";
-import type { FC } from "hono/jsx";
+import { ResponseContentComponent } from "./ResponseContent";
 
 type ThreadWithResponses = {
   thread: ReadThread;
@@ -48,7 +45,9 @@ export const BoardTopPage: FC<BoardTopPageProps> = ({
             </p>
           </div>
           <div className="mb-4">
-            <h3 className="text-xl font-semibold text-gray-800">人気スレッド</h3>
+            <h3 className="text-xl font-semibold text-gray-800">
+              人気スレッド
+            </h3>
           </div>
           <ul className="flex flex-wrap gap-4">
             {threadTop30.map((thread, index) => (
@@ -190,7 +189,10 @@ export const BoardTopPage: FC<BoardTopPageProps> = ({
           ))}
         </section>
 
-        <section className="bg-white rounded-lg shadow-md p-6" id="new-thread-form">
+        <section
+          className="bg-white rounded-lg shadow-md p-6"
+          id="new-thread-form"
+        >
           <h2 className="text-2xl font-semibold mb-4">新規スレッド作成</h2>
           <form
             method="post"
@@ -257,4 +259,3 @@ export const BoardTopPage: FC<BoardTopPageProps> = ({
     </BoardLayout>
   );
 };
-

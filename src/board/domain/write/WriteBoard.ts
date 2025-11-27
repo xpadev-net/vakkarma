@@ -1,12 +1,11 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
-import type { WriteBoardId } from "./WriteBoardId";
-import type { WriteBoardSlug } from "./WriteBoardSlug";
 import type { WriteBoardName } from "../../../config/domain/write/WriteBoardName";
 import type { WriteDefaultAuthorName } from "../../../config/domain/write/WriteDefaultAuthorName";
 import type { WriteLocalRule } from "../../../config/domain/write/WriteLocalRule";
 import type { WriteMaxContentLength } from "../../../config/domain/write/WriteMaxContentLength";
-import type { Result } from "neverthrow";
+import type { WriteBoardId } from "./WriteBoardId";
+import type { WriteBoardSlug } from "./WriteBoardSlug";
 
 export type WriteBoard = {
   readonly _type: "WriteBoard";
@@ -55,4 +54,3 @@ export const createWriteBoard = ({
     isDefault,
   });
 };
-

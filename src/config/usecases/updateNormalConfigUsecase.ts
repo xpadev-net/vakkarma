@@ -1,14 +1,11 @@
-import { err, ok } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createWriteBoardName } from "../domain/write/WriteBoardName";
 import { createWriteDefaultAuthorName } from "../domain/write/WriteDefaultAuthorName";
 import { createWriteLocalRule } from "../domain/write/WriteLocalRule";
 import { createWriteMaxContentLength } from "../domain/write/WriteMaxContentLength";
 import { createWriteNormalConfig } from "../domain/write/WriteNormalConfig";
 import { updateNormalConfigRepository } from "../repositories/updateNormalConfigRepository";
-
-import type { VakContext } from "../../shared/types/VakContext";
 
 export const updateNormalConfigUsecase = async (
   vakContext: VakContext,
@@ -22,7 +19,7 @@ export const updateNormalConfigUsecase = async (
     localRuleRaw: string;
     defaultAuthorNameRaw: string;
     maxContentLengthRaw: number;
-  }
+  },
 ): Promise<Result<undefined, Error>> => {
   const { logger } = vakContext;
 

@@ -1,11 +1,9 @@
 import { err, ok } from "neverthrow";
-
+import type { BoardContext } from "../../board/types/BoardContext";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createWriteResponseNumber } from "../domain/write/WriteResponseNumber";
 import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { getResponseByThreadIdAndResNumRangeRepository } from "../repositories/getResponseByThreadIdAndResNumRangeRepository";
-
-import type { BoardContext } from "../../board/types/BoardContext";
-import type { VakContext } from "../../shared/types/VakContext";
 
 // スレッドについている指定範囲のレスを取得するユースケース
 export const getResponseByThreadIdAndResNumRangeUsecase = async (
@@ -19,7 +17,7 @@ export const getResponseByThreadIdAndResNumRangeUsecase = async (
     threadIdRaw: string;
     startResponseNumberRaw: number | null;
     endResponseNumberRaw: number | null;
-  }
+  },
 ) => {
   const { logger } = vakContext;
 
@@ -59,7 +57,7 @@ export const getResponseByThreadIdAndResNumRangeUsecase = async (
     });
 
     const startResponseNumberResult = createWriteResponseNumber(
-      startResponseNumberRaw
+      startResponseNumberRaw,
     );
     if (startResponseNumberResult.isErr()) {
       logger.error({

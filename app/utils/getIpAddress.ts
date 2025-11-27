@@ -1,8 +1,6 @@
-import { env } from "hono/adapter";
-
-import { getConnInfowithRuntimeSwitch } from "./getConnInfoRuntimeSwitch";
-
 import type { Context } from "hono";
+import { env } from "hono/adapter";
+import { getConnInfowithRuntimeSwitch } from "./getConnInfoRuntimeSwitch";
 
 export const getIpAddress = (c: Context): string => {
   // ヘッダからプロキシの識別子とヘッダを取得

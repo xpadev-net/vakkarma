@@ -1,8 +1,9 @@
-@import "tailwindcss" source("../app");
+@import "tailwindcss";
 
 @font-face {
   font-family: "aahub-light4";
-  src: url("../fonts/aahub_light4.woff2") format("woff2"),
+  src:
+    url("../fonts/aahub_light4.woff2") format("woff2"),
     url("../fonts/aahub_light4.woff") format("woff"),
     url("../fonts/aahub_light4.ttf") format("ttf");
   font-display: swap;
@@ -10,7 +11,7 @@
 
 @layer utilities {
   .font-aahub-light4 {
-    font-family: "aahub-light4";
+    font-family: "aahub-light4", sans-serif;
     line-height: 18px;
   }
 }

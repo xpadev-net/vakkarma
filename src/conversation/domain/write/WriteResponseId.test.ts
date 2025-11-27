@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { generateResponseId, createResponseId } from "./WriteResponseId";
+import { createResponseId, generateResponseId } from "./WriteResponseId";
 
 describe("WriteResponseId", () => {
   describe("generateResponseId", () => {
@@ -10,7 +10,7 @@ describe("WriteResponseId", () => {
       expect(responseId._type).toBe("WriteResponseId");
       // UUIDv7の形式チェック（36文字でハイフンを含む）
       expect(responseId.val).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
       );
     });
 

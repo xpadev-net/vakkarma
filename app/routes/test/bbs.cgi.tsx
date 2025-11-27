@@ -22,7 +22,6 @@ const responseBody = `
 
 const responseBodyShiftJis = iconv.encode(responseBody, "Shift_JIS");
 
- 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   if (!sql) {
@@ -34,7 +33,9 @@ export const POST = createRoute(async (c) => {
 
   const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
   if (boardContextResult.isErr()) {
-    return convertShiftJis(`エラーが発生しました: ${boardContextResult.error.message}`);
+    return convertShiftJis(
+      `エラーが発生しました: ${boardContextResult.error.message}`,
+    );
   }
   const boardContext = boardContextResult.value;
 
@@ -85,17 +86,13 @@ export const POST = createRoute(async (c) => {
 
   // subjectがある場合→新規スレッド作成
   if (subject) {
-    const result = await postThreadUsecase(
-      vakContext,
-      boardContext,
-      {
-        threadTitleRaw: subject,
-        authorNameRaw: name,
-        mailRaw: mail,
-        responseContentRaw: content,
-        ipAddressRaw,
-      }
-    );
+    const result = await postThreadUsecase(vakContext, boardContext, {
+      threadTitleRaw: subject,
+      authorNameRaw: name,
+      mailRaw: mail,
+      responseContentRaw: content,
+      ipAddressRaw,
+    });
     if (result.isErr()) {
       return convertShiftJis(`エラーが発生しました: ${result.error.message}`);
     }
@@ -115,7 +112,7 @@ export const POST = createRoute(async (c) => {
         mailRaw: mail,
         responseContentRaw: content,
         ipAddressRaw,
-      }
+      },
     );
     if (result.isErr()) {
       return convertShiftJis(`エラーが発生しました: ${result.error.message}`);

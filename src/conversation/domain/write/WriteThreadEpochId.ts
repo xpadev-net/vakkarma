@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 
@@ -12,7 +12,7 @@ export type WriteThreadEpochId = {
 };
 //postedAtを元に、秒単位のepochとしてスレッドIDを生成
 export const generateWriteThreadEpochId = (
-  postedAt: WritePostedAt
+  postedAt: WritePostedAt,
 ): Result<WriteThreadEpochId, ValidationError> => {
   const value = Math.floor(postedAt.val.getTime() / 1000);
 
@@ -20,14 +20,14 @@ export const generateWriteThreadEpochId = (
 };
 
 export const createWriteThreadEpochId = (
-  value: string
+  value: string,
 ): Result<WriteThreadEpochId, ValidationError> => {
   if (value === "") {
     return err(new ValidationError("ThreadEpochIdは空文字列にできません"));
   }
   // BIGINTを扱うため、数値に変換
   const epochId = Number(value);
-  if (isNaN(epochId)) {
+  if (Number.isNaN(epochId)) {
     return err(new ValidationError("ThreadEpochIdは数値である必要があります"));
   }
   return ok({ _type: "WriteThreadEpochId", val: epochId });

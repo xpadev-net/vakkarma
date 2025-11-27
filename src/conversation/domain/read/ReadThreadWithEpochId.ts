@@ -1,10 +1,9 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
 import type { ReadPostedAt } from "./ReadPostedAt";
 import type { ReadThreadEpochId } from "./ReadThreadEpochId";
 import type { ReadThreadId } from "./ReadThreadId";
 import type { ReadThreadTitle } from "./ReadThreadTitle";
-import type { Result } from "neverthrow";
 
 export type ReadThreadWithEpochId = {
   readonly _type: "ReadThreadWithEpochId";

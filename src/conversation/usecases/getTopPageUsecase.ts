@@ -1,19 +1,17 @@
 // トップページのユースケース
 
-import { ok, err } from "neverthrow";
-
-import { createWriteThreadId } from "../domain/write/WriteThreadId";
-import { getLatest10ThreadsWithResponsesRepository } from "../repositories/getLatest10ThreadsWithResposesRepository";
-import { getLatest30ThreadsRepository } from "../repositories/getLatest30ThreadsRepository";
-
+import { err, ok } from "neverthrow";
 import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadResponse } from "../domain/read/ReadResponse";
 import type { ReadThread } from "../domain/read/ReadThread";
+import { createWriteThreadId } from "../domain/write/WriteThreadId";
+import { getLatest10ThreadsWithResponsesRepository } from "../repositories/getLatest10ThreadsWithResposesRepository";
+import { getLatest30ThreadsRepository } from "../repositories/getLatest30ThreadsRepository";
 
 export const getTopPageUsecase = async (
   vakContext: VakContext,
-  boardContext: BoardContext
+  boardContext: BoardContext,
 ) => {
   const { logger } = vakContext;
 
@@ -28,10 +26,9 @@ export const getTopPageUsecase = async (
     message: "Fetching top 30 threads",
   });
 
-  const threadsTop30Result = await getLatest30ThreadsRepository(
-    vakContext,
-    { boardId: boardContext.boardId }
-  );
+  const threadsTop30Result = await getLatest30ThreadsRepository(vakContext, {
+    boardId: boardContext.boardId,
+  });
   if (threadsTop30Result.isErr()) {
     logger.error({
       operation: "getTopPageUsecase",
@@ -96,7 +93,7 @@ export const getTopPageUsecase = async (
   if (top10ThreadIds.length > 0) {
     const responsesTop10 = await getLatest10ThreadsWithResponsesRepository(
       vakContext,
-      { threadIds: top10ThreadIds }
+      { threadIds: top10ThreadIds },
     );
     if (responsesTop10.isErr()) {
       logger.error({
@@ -107,28 +104,28 @@ export const getTopPageUsecase = async (
       return err(responsesTop10.error);
     }
 
-  logger.debug({
-    operation: "getTopPageUsecase",
-    responseCount: responsesTop10.value.length,
-    message: "Successfully fetched responses for top 10 threads",
-  });
-
-  // 上位10件のスレッドのレスについて、先程のふたつを結合して完全版の構造体を作成
-  // それぞれのスレッドに対してレスとして表現する構造体を作成
-  // まずそれぞれのスレッドについて連想配列を作成
-  const threadResponseMap: Map<
-    string,
-    {
-      thread: ReadThread;
-      responses: ReadResponse[];
-    }
-  > = new Map();
-  for (const thread of threadsTop30Result.value.slice(0, 10)) {
-    threadResponseMap.set(thread.id.val, {
-      thread,
-      responses: [],
+    logger.debug({
+      operation: "getTopPageUsecase",
+      responseCount: responsesTop10.value.length,
+      message: "Successfully fetched responses for top 10 threads",
     });
-  }
+
+    // 上位10件のスレッドのレスについて、先程のふたつを結合して完全版の構造体を作成
+    // それぞれのスレッドに対してレスとして表現する構造体を作成
+    // まずそれぞれのスレッドについて連想配列を作成
+    const threadResponseMap: Map<
+      string,
+      {
+        thread: ReadThread;
+        responses: ReadResponse[];
+      }
+    > = new Map();
+    for (const thread of threadsTop30Result.value.slice(0, 10)) {
+      threadResponseMap.set(thread.id.val, {
+        thread,
+        responses: [],
+      });
+    }
 
     // 連想配列にレスを追加
     for (const response of responsesTop10.value) {

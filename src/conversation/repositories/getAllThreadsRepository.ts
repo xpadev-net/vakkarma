@@ -1,19 +1,16 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { ValidationError } from "../../shared/types/Error";
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadPostedAt } from "../domain/read/ReadPostedAt";
 import { createReadThread, type ReadThread } from "../domain/read/ReadThread";
 import { createReadThreadId } from "../domain/read/ReadThreadId";
 import { createReadThreadTitle } from "../domain/read/ReadThreadTitle";
 
-import type { ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
-
 // すべてのスレッドを取得するだけのリポジトリ
 export const getAllThreadsRepository = async (
   { sql, logger }: VakContext,
-  { boardId }: { boardId: string }
+  { boardId }: { boardId: string },
 ): Promise<
   Result<ReadThread[], DatabaseError | DataNotFoundError | ValidationError>
 > => {
@@ -123,8 +120,8 @@ export const getAllThreadsRepository = async (
     return err(
       new DatabaseError(
         `スレッド取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

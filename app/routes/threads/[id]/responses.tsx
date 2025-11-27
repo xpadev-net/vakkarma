@@ -5,7 +5,6 @@ import { ErrorMessage } from "../../../components/ErrorMessage";
 import { resolveBoardContext } from "../../../utils/getBoardContext";
 import { getIpAddress } from "../../../utils/getIpAddress";
 
- 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   const vakContext = { sql, logger };
@@ -26,7 +25,7 @@ export const POST = createRoute(async (c) => {
       message: "Thread ID not specified in request",
     });
     return c.render(
-      <ErrorMessage error={new Error("スレッドIDが指定されていません")} />
+      <ErrorMessage error={new Error("スレッドIDが指定されていません")} />,
     );
   }
 
@@ -91,7 +90,7 @@ export const POST = createRoute(async (c) => {
       mailRaw: mail,
       responseContentRaw: content,
       ipAddressRaw,
-    }
+    },
   );
   if (responseResult.isErr()) {
     logger.error({
@@ -134,6 +133,6 @@ export default createRoute((c) => {
   }
 
   return c.render(
-    <ErrorMessage error={new Error("POSTメソッドでアクセスしてください")} />
+    <ErrorMessage error={new Error("POSTメソッドでアクセスしてください")} />,
   );
 });

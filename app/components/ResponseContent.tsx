@@ -1,7 +1,7 @@
-import type { ReadResponseContent } from "../../src/conversation/domain/read/ReadResponseContent";
-import type { ReadThreadId } from "../../src/conversation/domain/read/ReadThreadId";
 import type { FC } from "hono/jsx";
 import type { JSX } from "hono/jsx/jsx-runtime"; // JSX要素の型定義のために追加
+import type { ReadResponseContent } from "../../src/conversation/domain/read/ReadResponseContent";
+import type { ReadThreadId } from "../../src/conversation/domain/read/ReadThreadId";
 
 // --- Helper Functions ---
 
@@ -21,7 +21,7 @@ const escapeRegex = /(\\```|\\\*\*\*|\\~~~|\\>>|\\https?:\/\/)/g;
 
 // プレースホルダーから元の文字（エスケープ文字なし）に戻すマッピング
 const unescapeMap = Object.fromEntries(
-  Object.entries(escapeMap).map(([key, value]) => [value, key.substring(1)]) // 先頭の \ を削除
+  Object.entries(escapeMap).map(([key, value]) => [value, key.substring(1)]), // 先頭の \ を削除
 );
 const unescapeRegex = new RegExp(Object.keys(unescapeMap).join("|"), "g");
 
@@ -32,7 +32,7 @@ const escapeMarkdown = (text: string): string => {
   // 他のエスケープ対象を置換
   escapedText = escapedText.replace(
     escapeRegex,
-    (match) => escapeMap[match] || match
+    (match) => escapeMap[match] || match,
   );
   return escapedText;
 };
@@ -42,7 +42,7 @@ const unescapeResult = (part: string | JSX.Element): string | JSX.Element => {
   if (typeof part === "string") {
     let unescapedText = part.replace(
       unescapeRegex,
-      (match) => unescapeMap[match] || match
+      (match) => unescapeMap[match] || match,
     );
     // 最後にバックスラッシュを戻す
     unescapedText = unescapedText.replace(/__ESC_BACKSLASH__/g, "\\");
@@ -60,9 +60,9 @@ const processInlineDecorations = (text: string): (string | JSX.Element)[] => {
   // 正規表現: ***...*** または ~~~...~~~ (non-greedy)
   // Note: エスケープされたものはプレースホルダーになっている想定
   const inlineRegex = /(\*\*\*(.*?)\*\*\*)|(~~~(.*?)~~~)/g;
-  let match;
+  let match: RegExpExecArray | null = inlineRegex.exec(text);
 
-  while ((match = inlineRegex.exec(text)) !== null) {
+  while (match !== null) {
     // マッチ前のテキストを追加
     if (match.index > lastIndex) {
       parts.push(text.substring(lastIndex, match.index));
@@ -75,13 +75,14 @@ const processInlineDecorations = (text: string): (string | JSX.Element)[] => {
       parts.push(
         <strong key={`strong-${match.index}`} className="font-black">
           {match[2]}
-        </strong>
+        </strong>,
       );
     } else if (match[3]) {
       // ~~~...~~~ (取り消し線)
       parts.push(<s key={`s-${match.index}`}>{match[4]}</s>);
     }
     lastIndex = inlineRegex.lastIndex; // lastIndex を更新
+    match = inlineRegex.exec(text);
   }
 
   // 最後のマッチ以降のテキストを追加
@@ -95,7 +96,6 @@ const processInlineDecorations = (text: string): (string | JSX.Element)[] => {
 
 // --- ResponseLineComponent ---
 
- 
 export const ResponseLineComponent: FC<{
   line: string;
   threadId: ReadThreadId;
@@ -112,9 +112,9 @@ export const ResponseLineComponent: FC<{
   const linkRegex = />>(\d+)|(https?:\/\/[^\s<>"']+)/g;
   const linkParts: (string | JSX.Element)[] = [];
   let lastIndex = 0;
-  let match;
+  let match: RegExpExecArray | null = linkRegex.exec(contentLine);
 
-  while ((match = linkRegex.exec(contentLine)) !== null) {
+  while (match !== null) {
     // マッチ前のテキストを追加
     if (match.index > lastIndex) {
       linkParts.push(contentLine.substring(lastIndex, match.index));
@@ -130,7 +130,7 @@ export const ResponseLineComponent: FC<{
           href={`#${threadId.val}-${match[1]}`}
         >
           {`>>${match[1]}`}
-        </a>
+        </a>,
       );
     } else if (match[2]) {
       // URL
@@ -144,10 +144,11 @@ export const ResponseLineComponent: FC<{
           rel="noopener noreferrer"
         >
           {url}
-        </a>
+        </a>,
       );
     }
     lastIndex = linkRegex.lastIndex; // lastIndex を更新
+    match = linkRegex.exec(contentLine);
   }
 
   // 最後のマッチ以降のテキストを追加
@@ -158,7 +159,7 @@ export const ResponseLineComponent: FC<{
   // 4. 行内装飾 (太字、取り消し線) の処理
   const decoratedParts = linkParts.flatMap(
     (part) =>
-      typeof part === "string" ? processInlineDecorations(part) : [part] // 文字列なら装飾処理、JSXならそのまま
+      typeof part === "string" ? processInlineDecorations(part) : [part], // 文字列なら装飾処理、JSXならそのまま
   );
 
   // 5. エスケープ文字の復元 (プレースホルダーを元の文字に)
@@ -171,7 +172,6 @@ export const ResponseLineComponent: FC<{
 
 // --- ResponseContentComponent ---
 
- 
 export const ResponseContentComponent: FC<{
   threadId: ReadThreadId;
   responseContent: ReadResponseContent;
@@ -198,7 +198,7 @@ export const ResponseContentComponent: FC<{
             className="bg-gray-200 p-2 rounded overflow-x-auto"
           >
             <code className="text-sm">{codeBlockLines.join("\n")}</code>
-          </pre>
+          </pre>,
         );
         codeBlockLines = []; // クリア
         inCodeBlock = false;
@@ -217,7 +217,7 @@ export const ResponseContentComponent: FC<{
           // 各行を div でラップして、改行を表現しつつ block 要素とする
           <div key={i}>
             <ResponseLineComponent line={line} threadId={threadId} />
-          </div>
+          </div>,
         );
       }
     }
@@ -231,7 +231,7 @@ export const ResponseContentComponent: FC<{
         className="bg-gray-200 p-2 rounded overflow-x-auto"
       >
         <code className="text-sm">{codeBlockLines.join("\n")}</code>
-      </pre>
+      </pre>,
     );
   }
 

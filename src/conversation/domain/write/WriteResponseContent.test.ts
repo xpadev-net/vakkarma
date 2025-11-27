@@ -1,5 +1,5 @@
 import { ok } from "neverthrow";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteResponseContent } from "./WriteResponseContent";
 
@@ -12,7 +12,7 @@ describe("WriteResponseContent", () => {
   it("正常な値で作成できること", async () => {
     const result = await createWriteResponseContent(
       "これはテスト投稿です",
-      mockGetMaxContentLength
+      mockGetMaxContentLength,
     );
 
     expect(result.isOk()).toBe(true);
@@ -25,7 +25,7 @@ describe("WriteResponseContent", () => {
   it("空文字列の場合はエラーになること", async () => {
     const result = await createWriteResponseContent(
       "",
-      mockGetMaxContentLength
+      mockGetMaxContentLength,
     );
 
     expect(result.isErr()).toBe(true);
@@ -42,7 +42,7 @@ describe("WriteResponseContent", () => {
 
     const result = await createWriteResponseContent(
       "これは長すぎるテスト投稿です",
-      mockGetMaxContentLength10
+      mockGetMaxContentLength10,
     );
 
     expect(result.isErr()).toBe(true);
@@ -59,7 +59,7 @@ describe("WriteResponseContent", () => {
 
     const result = await createWriteResponseContent(
       "ちょうど10文字",
-      mockGetMaxContentLength10
+      mockGetMaxContentLength10,
     );
 
     expect(result.isOk()).toBe(true);

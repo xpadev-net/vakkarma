@@ -1,23 +1,14 @@
 import { err, ok, Result } from "neverthrow";
 
-import {
-  createWriteBoardName,
-} from "../../config/domain/write/WriteBoardName";
-import {
-  createWriteDefaultAuthorName,
-} from "../../config/domain/write/WriteDefaultAuthorName";
-import {
-  createWriteLocalRule,
-} from "../../config/domain/write/WriteLocalRule";
-import {
-  createWriteMaxContentLength,
-} from "../../config/domain/write/WriteMaxContentLength";
+import { createWriteBoardName } from "../../config/domain/write/WriteBoardName";
+import { createWriteDefaultAuthorName } from "../../config/domain/write/WriteDefaultAuthorName";
+import { createWriteLocalRule } from "../../config/domain/write/WriteLocalRule";
+import { createWriteMaxContentLength } from "../../config/domain/write/WriteMaxContentLength";
+import type { VakContext } from "../../shared/types/VakContext";
+import type { ReadBoard } from "../domain/read/ReadBoard";
 import { createWriteBoardSlug } from "../domain/write/WriteBoardSlug";
 import { getBoardByIdRepository } from "../repositories/getBoardByIdRepository";
 import { updateBoardRepository } from "../repositories/updateBoardRepository";
-
-import type { VakContext } from "../../shared/types/VakContext";
-import type { ReadBoard } from "../domain/read/ReadBoard";
 
 export const updateBoardUsecase = async (
   vakContext: VakContext,
@@ -37,7 +28,7 @@ export const updateBoardUsecase = async (
     defaultAuthorNameRaw: string;
     maxContentLengthRaw: number;
     orderIndexRaw?: number;
-  }
+  },
 ): Promise<Result<ReadBoard, Error>> => {
   const existingBoardResult = await getBoardByIdRepository(vakContext, boardId);
   if (existingBoardResult.isErr()) {
@@ -76,4 +67,3 @@ export const updateBoardUsecase = async (
 
   return ok(updateResult.value);
 };
-

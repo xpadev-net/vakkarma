@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 
@@ -9,7 +9,7 @@ export type WriteResponseContent = {
 };
 export const createWriteResponseContent = async (
   value: string,
-  getMaxContentLength: () => Promise<Result<number, Error>>
+  getMaxContentLength: () => Promise<Result<number, Error>>,
 ): Promise<Result<WriteResponseContent, ValidationError>> => {
   if (value.length === 0) {
     return err(new ValidationError("本文は必須です"));
@@ -22,7 +22,7 @@ export const createWriteResponseContent = async (
 
   if (value.length > maxLen.value) {
     return err(
-      new ValidationError(`本文は${maxLen.value}文字以内で入力してください`)
+      new ValidationError(`本文は${maxLen.value}文字以内で入力してください`),
     );
   }
   return ok({ _type: "WriteResponseContent", val: value });

@@ -1,15 +1,12 @@
-import type { BoardLink } from "./boardTypes";
 import type { FC } from "hono/jsx";
+import type { BoardLink } from "./boardTypes";
 
 type BoardSidebarProps = {
   boards: BoardLink[];
   activeSlug: string;
 };
 
-export const BoardSidebar: FC<BoardSidebarProps> = ({
-  boards,
-  activeSlug,
-}) => {
+export const BoardSidebar: FC<BoardSidebarProps> = ({ boards, activeSlug }) => {
   return (
     <aside className="bg-white rounded-lg shadow-md p-4">
       <h2 className="text-lg font-semibold text-gray-800 mb-3">掲示板一覧</h2>
@@ -35,4 +32,3 @@ export const BoardSidebar: FC<BoardSidebarProps> = ({
     </aside>
   );
 };
-

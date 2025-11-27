@@ -1,10 +1,9 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
 
-import { getDefaultBoardRepository } from "../repositories/getDefaultBoardRepository";
-
 import type { VakContext } from "../../shared/types/VakContext";
+import { getDefaultBoardRepository } from "../repositories/getDefaultBoardRepository";
 import type { BoardContext } from "../types/BoardContext";
-import type { Result } from "neverthrow";
 
 const mapToBoardContext = (board: {
   id: { val: string };
@@ -25,7 +24,7 @@ const mapToBoardContext = (board: {
 };
 
 export const getDefaultBoardContextUsecase = async (
-  vakContext: VakContext
+  vakContext: VakContext,
 ): Promise<Result<BoardContext, Error>> => {
   const boardResult = await getDefaultBoardRepository(vakContext);
 
@@ -37,4 +36,3 @@ export const getDefaultBoardContextUsecase = async (
 };
 
 export const boardToContext = mapToBoardContext;
-

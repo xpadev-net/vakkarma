@@ -1,18 +1,13 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { DatabaseError } from "../../shared/types/Error";
-
-import {
-  mapBoardRecordToDomain,
-  type BoardRecord,
-} from "./boardRecordMapper";
-
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import { type BoardRecord, mapBoardRecordToDomain } from "./boardRecordMapper";
 
 export const listBoardsRepository = async (
   { sql, logger }: VakContext,
-  { includeInactive = false }: { includeInactive?: boolean } = {}
+  { includeInactive = false }: { includeInactive?: boolean } = {},
 ): Promise<Result<ReadBoard[], DatabaseError | Error>> => {
   logger.debug({
     operation: "listBoardsRepository",
@@ -88,9 +83,8 @@ export const listBoardsRepository = async (
     return err(
       new DatabaseError(
         `掲示板一覧の取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };
-

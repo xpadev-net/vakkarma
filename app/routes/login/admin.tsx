@@ -45,16 +45,15 @@ export default createRoute(async (c) => {
           </div>
         </form>
       </section>
-    </main>
+    </main>,
   );
 });
 
- 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   if (!sql) {
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -64,7 +63,9 @@ export const POST = createRoute(async (c) => {
     import.meta.env.VITE_JWT_SECRET_KEY;
   if (!secret) {
     return c.render(
-      <ErrorMessage error={new Error("JWT_SECRET_KEYが設定されていません。")} />
+      <ErrorMessage
+        error={new Error("JWT_SECRET_KEYが設定されていません。")}
+      />,
     );
   }
 
@@ -72,13 +73,13 @@ export const POST = createRoute(async (c) => {
   const inputPassword = body.adminPassword;
   if (typeof inputPassword !== "string") {
     return c.render(
-      <ErrorMessage error={new ValidationError("パスワードがありません")} />
+      <ErrorMessage error={new ValidationError("パスワードがありません")} />,
     );
   }
 
   const result = await verifyAdminPasswordUsecase(
     { sql, logger },
-    inputPassword
+    inputPassword,
   );
   if (result.isErr()) {
     return c.render(<ErrorMessage error={result.error} />);

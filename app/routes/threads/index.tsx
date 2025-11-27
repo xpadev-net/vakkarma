@@ -5,7 +5,6 @@ import { ErrorMessage } from "../../components/ErrorMessage";
 import { resolveBoardContext } from "../../utils/getBoardContext";
 import { getIpAddress } from "../../utils/getIpAddress";
 
- 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   const vakContext = { sql, logger };
@@ -15,7 +14,7 @@ export const POST = createRoute(async (c) => {
     operation: "threads/POST",
     path: c.req.path,
     method: c.req.method,
-    message: "Starting new thread creation request"
+    message: "Starting new thread creation request",
   });
 
   const body = await c.req.parseBody();
@@ -30,7 +29,7 @@ export const POST = createRoute(async (c) => {
     hasContent: typeof content === "string",
     hasName: name !== null,
     hasMail: mail !== null,
-    message: "Request body parsed for thread creation"
+    message: "Request body parsed for thread creation",
   });
 
   if (typeof title !== "string" || typeof content !== "string") {
@@ -39,19 +38,19 @@ export const POST = createRoute(async (c) => {
       validationError: "Missing required fields",
       hasTitle: typeof title === "string",
       hasContent: typeof content === "string",
-      message: "Thread creation validation failed - missing required fields"
+      message: "Thread creation validation failed - missing required fields",
     });
     return c.render(
-      <ErrorMessage error={new Error("タイトルと本文は必須です")} />
+      <ErrorMessage error={new Error("タイトルと本文は必須です")} />,
     );
   }
 
   const ipAddressRaw = getIpAddress(c);
-  
+
   logger.debug({
     operation: "threads/POST",
     ipAddress: ipAddressRaw,
-    message: "IP address extracted for thread creation"
+    message: "IP address extracted for thread creation",
   });
 
   const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
@@ -73,13 +72,13 @@ export const POST = createRoute(async (c) => {
       mailRaw: mail,
       responseContentRaw: content,
       ipAddressRaw,
-    }
+    },
   );
   if (postThreadResult.isErr()) {
     logger.error({
       operation: "threads/POST",
       error: postThreadResult.error,
-      message: "Thread creation failed in usecase layer"
+      message: "Thread creation failed in usecase layer",
     });
     return c.render(<ErrorMessage error={postThreadResult.error} />);
   }
@@ -102,14 +101,14 @@ export const POST = createRoute(async (c) => {
 export default createRoute((c) => {
   const { logger } = c.var;
   const boardSlug = c.req.param("boardSlug");
-  
+
   logger.debug({
     operation: "threads/GET",
     path: c.req.path,
     method: c.req.method,
-    message: "Thread index page requested, redirecting to home page"
+    message: "Thread index page requested, redirecting to home page",
   });
-  
+
   if (boardSlug) {
     return c.redirect(`/boards/${boardSlug}`, 302);
   }

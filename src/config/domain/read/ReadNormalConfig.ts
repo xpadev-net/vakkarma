@@ -1,10 +1,9 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
 import type { ReadBoardName } from "./ReadBoardName";
 import type { ReadDefaultAuthorName } from "./ReadDefaultAuthorName";
 import type { ReadLocalRule } from "./ReadLocalRule";
 import type { ReadMaxContentLength } from "./ReadMaxContentLength";
-import type { Result } from "neverthrow";
 
 export type ReadNormalConfig = {
   readonly _type: "ReadNormalConfig";

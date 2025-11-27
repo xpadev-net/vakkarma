@@ -19,7 +19,7 @@ export default createRoute(async (c) => {
       message: "Database connection not available",
     });
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -188,7 +188,11 @@ export default createRoute(async (c) => {
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           新規板の作成
         </h2>
-        <form method="post" action="/admin/boards" className="grid gap-4 md:grid-cols-2">
+        <form
+          method="post"
+          action="/admin/boards"
+          className="grid gap-4 md:grid-cols-2"
+        >
           <label className="text-sm font-semibold text-gray-700">
             スラッグ
             <input
@@ -257,6 +261,6 @@ export default createRoute(async (c) => {
           </div>
         </form>
       </section>
-    </main>
+    </main>,
   );
 });

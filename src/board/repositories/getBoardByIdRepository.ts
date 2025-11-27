@@ -1,21 +1,13 @@
 import { err, ok, type Result } from "neverthrow";
 
-import {
-  DataNotFoundError,
-  DatabaseError,
-} from "../../shared/types/Error";
-
-import {
-  mapBoardRecordToDomain,
-  type BoardRecord,
-} from "./boardRecordMapper";
-
+import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import { type BoardRecord, mapBoardRecordToDomain } from "./boardRecordMapper";
 
 export const getBoardByIdRepository = async (
   { sql, logger }: VakContext,
-  boardId: string
+  boardId: string,
 ): Promise<Result<ReadBoard, DatabaseError | DataNotFoundError>> => {
   logger.debug({
     operation: "getBoardByIdRepository",
@@ -72,9 +64,8 @@ export const getBoardByIdRepository = async (
     return err(
       new DatabaseError(
         `板情報の取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };
-

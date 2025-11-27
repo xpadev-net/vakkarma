@@ -1,6 +1,5 @@
-import { ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { ok } from "neverthrow";
 
 export type ReadBoardName = {
   readonly _type: "ReadBoardName";
@@ -8,7 +7,7 @@ export type ReadBoardName = {
 };
 
 export const createReadBoardName = (
-  boardName: string
+  boardName: string,
 ): Result<ReadBoardName, Error> => {
   return ok({
     _type: "ReadBoardName",

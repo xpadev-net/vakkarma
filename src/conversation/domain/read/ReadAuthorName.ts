@@ -23,7 +23,7 @@ export type ReadAuthorName = {
 
 export const createReadAuthorName = (
   authorName: string,
-  trip: string | null
+  trip: string | null,
 ): Result<ReadAuthorName, ValidationError> => {
   if (trip === null || trip === "") {
     return ok({

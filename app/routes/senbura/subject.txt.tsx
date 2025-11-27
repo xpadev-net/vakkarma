@@ -14,12 +14,12 @@ export default createRoute(async (c) => {
   const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
   if (boardContextResult.isErr()) {
     return convertShiftJis(
-      `エラーが発生しました: ${boardContextResult.error.message}`
+      `エラーが発生しました: ${boardContextResult.error.message}`,
     );
   }
   const threads = await getAllThreadsWithEpochIdUsecase(
     vakContext,
-    boardContextResult.value
+    boardContextResult.value,
   );
   if (threads.isErr()) {
     return convertShiftJis(`エラーが発生しました: ${threads.error.message}`);

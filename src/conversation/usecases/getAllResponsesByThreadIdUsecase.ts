@@ -1,16 +1,14 @@
 import { err, ok } from "neverthrow";
-
-import { createWriteThreadId } from "../domain/write/WriteThreadId";
-import { getAllResponsesByThreadIdRepository } from "../repositories/getAllResponsesByThreadIdRepository";
-
 import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
+import { createWriteThreadId } from "../domain/write/WriteThreadId";
+import { getAllResponsesByThreadIdRepository } from "../repositories/getAllResponsesByThreadIdRepository";
 
 // スレッドについているレスをすべて確認するユースケース
 export const getAllResponsesByThreadIdUsecase = async (
   vakContext: VakContext,
   boardContext: BoardContext,
-  { threadIdRaw }: { threadIdRaw: string }
+  { threadIdRaw }: { threadIdRaw: string },
 ) => {
   const { logger } = vakContext;
 
@@ -50,7 +48,7 @@ export const getAllResponsesByThreadIdUsecase = async (
     {
       threadId: threadIdResult.value,
       boardId: boardContext.boardId,
-    }
+    },
   );
   if (responsesWithThreadResult.isErr()) {
     logger.error({

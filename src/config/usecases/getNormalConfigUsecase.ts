@@ -1,13 +1,12 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-import { getNormalConfigRepository } from "../repositories/getNormalConfigRepository";
 
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadNormalConfig } from "../domain/read/ReadNormalConfig";
-import type { Result } from "neverthrow";
+import { getNormalConfigRepository } from "../repositories/getNormalConfigRepository";
 
 export const getNormalConfigUsecase = async (
-  vakContext: VakContext
+  vakContext: VakContext,
 ): Promise<Result<ReadNormalConfig, Error>> => {
   const { logger } = vakContext;
 

@@ -8,7 +8,7 @@ export const POST = createRoute(async (c) => {
 
   if (!sql) {
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -38,14 +38,16 @@ export const POST = createRoute(async (c) => {
     !maxLengthRaw
   ) {
     return c.render(
-      <ErrorMessage error={new Error("すべての必須項目を入力してください")} />
+      <ErrorMessage error={new Error("すべての必須項目を入力してください")} />,
     );
   }
 
   const maxContentLength = Number(maxLengthRaw);
   if (!Number.isFinite(maxContentLength) || maxContentLength <= 0) {
     return c.render(
-      <ErrorMessage error={new Error("最大文字数は正の数で入力してください")} />
+      <ErrorMessage
+        error={new Error("最大文字数は正の数で入力してください")}
+      />,
     );
   }
 
@@ -56,7 +58,7 @@ export const POST = createRoute(async (c) => {
     (Number.isNaN(orderIndex) || !Number.isFinite(orderIndex))
   ) {
     return c.render(
-      <ErrorMessage error={new Error("並び順は数値で入力してください")} />
+      <ErrorMessage error={new Error("並び順は数値で入力してください")} />,
     );
   }
 
@@ -83,4 +85,3 @@ export default createRoute((c) => {
   c.status(405);
   return c.body(null);
 });
-

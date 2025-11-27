@@ -1,7 +1,6 @@
-import { ja, enUS } from "date-fns/locale";
-import { formatInTimeZone } from "date-fns-tz";
-
 import type { Locale } from "date-fns";
+import { enUS, ja } from "date-fns/locale";
+import { formatInTimeZone } from "date-fns-tz";
 
 // モジュールロード時に実行環境のタイムゾーンをキャッシュ
 const defaultTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -18,7 +17,7 @@ function inferTimeZone(code: string): string {
  */
 export function formatDate(
   date: Date,
-  options?: { acceptLanguage?: string }
+  options?: { acceptLanguage?: string },
 ): string {
   const lang = options?.acceptLanguage?.split(",")[0].toLowerCase() || "";
   const tz = inferTimeZone(lang);

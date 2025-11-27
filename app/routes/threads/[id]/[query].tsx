@@ -1,6 +1,7 @@
 import { createRoute } from "honox/factory";
-
+import type { Result } from "neverthrow";
 import { listBoardsUsecase } from "../../../../src/board/usecases/listBoardsUsecase";
+import type { ReadThreadWithResponses } from "../../../../src/conversation/domain/read/ReadThreadWithResponses";
 import { getAllResponsesByThreadIdUsecase } from "../../../../src/conversation/usecases/getAllResponsesByThreadIdUsecase";
 import { getLatestResponsesByThreadIdAndCountUsecase } from "../../../../src/conversation/usecases/getLatestResponsesByThreadIdAndCountUsecase";
 import { getResponseByThreadIdAndResNumRangeUsecase } from "../../../../src/conversation/usecases/getResponseByThreadIdAndResNumRangeUsecase";
@@ -8,9 +9,6 @@ import { getResponseByThreadIdAndResNumUsecase } from "../../../../src/conversat
 import { ErrorMessage } from "../../../components/ErrorMessage";
 import { ThreadPage } from "../../../components/ThreadPage";
 import { resolveBoardContext } from "../../../utils/getBoardContext";
-
-import type { ReadThreadWithResponses } from "../../../../src/conversation/domain/read/ReadThreadWithResponses";
-import type { Result } from "neverthrow";
 
 export default createRoute(async (c) => {
   const { sql, logger } = c.var;
@@ -29,7 +27,7 @@ export default createRoute(async (c) => {
     });
     c.status(500);
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -55,7 +53,7 @@ export default createRoute(async (c) => {
   if (!boardSlug) {
     return c.redirect(
       `/boards/${boardContext.slug}/threads/${id}/${queryString}`,
-      302
+      302,
     );
   }
 
@@ -73,14 +71,14 @@ export default createRoute(async (c) => {
     responsesResult = await getLatestResponsesByThreadIdAndCountUsecase(
       vakContext,
       boardContext,
-      { threadIdRaw: id, countRaw: count }
+      { threadIdRaw: id, countRaw: count },
     );
   } else if (/^\d+$/.test(queryString)) {
     const resNum = parseInt(queryString, 10);
     responsesResult = await getResponseByThreadIdAndResNumUsecase(
       vakContext,
       boardContext,
-      { threadIdRaw: id, responseNumberRaw: resNum }
+      { threadIdRaw: id, responseNumberRaw: resNum },
     );
   } else if (/^\d*-\d*$/.test(queryString)) {
     const [startStr, endStr] = queryString.split("-");
@@ -93,13 +91,13 @@ export default createRoute(async (c) => {
         threadIdRaw: id,
         startResponseNumberRaw: start,
         endResponseNumberRaw: end,
-      }
+      },
     );
   } else {
     responsesResult = await getAllResponsesByThreadIdUsecase(
       vakContext,
       boardContext,
-      { threadIdRaw: id }
+      { threadIdRaw: id },
     );
   }
 
@@ -142,6 +140,6 @@ export default createRoute(async (c) => {
       responses={responsesResult.value.responses}
       latestResponseNumber={latestResponseNumber}
       acceptLanguage={c.req.header("Accept-Language") ?? undefined}
-    />
+    />,
   );
 });

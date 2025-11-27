@@ -1,5 +1,5 @@
 import { ok } from "neverthrow";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteAuthorName } from "./WriteAuthorName";
 
@@ -12,7 +12,7 @@ describe("WriteAuthorName", () => {
   it("通常の投稿者名で作成できること", async () => {
     const result = await createWriteAuthorName(
       "テスト太郎",
-      mockGetDefaultAuthorName
+      mockGetDefaultAuthorName,
     );
 
     expect(result.isOk()).toBe(true);
@@ -37,7 +37,7 @@ describe("WriteAuthorName", () => {
   it("トリップ付きの名前で作成できること", async () => {
     const result = await createWriteAuthorName(
       "テスト#test123",
-      mockGetDefaultAuthorName
+      mockGetDefaultAuthorName,
     );
 
     expect(result.isOk()).toBe(true);
@@ -55,7 +55,7 @@ describe("WriteAuthorName", () => {
     const longName = "あ".repeat(101); // 101文字
     const result = await createWriteAuthorName(
       longName,
-      mockGetDefaultAuthorName
+      mockGetDefaultAuthorName,
     );
 
     expect(result.isErr()).toBe(true);
@@ -68,7 +68,7 @@ describe("WriteAuthorName", () => {
     const name100 = "あ".repeat(100); // 100文字
     const result = await createWriteAuthorName(
       name100,
-      mockGetDefaultAuthorName
+      mockGetDefaultAuthorName,
     );
 
     expect(result.isOk()).toBe(true);

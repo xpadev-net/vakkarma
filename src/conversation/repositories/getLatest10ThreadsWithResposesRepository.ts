@@ -1,7 +1,10 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type {
+  DataNotFoundError,
+  ValidationError,
+} from "../../shared/types/Error";
 import { DatabaseError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -14,15 +17,12 @@ import { createReadResponseContent } from "../domain/read/ReadResponseContent";
 import { createReadResponseId } from "../domain/read/ReadResponseId";
 import { createReadResponseNumber } from "../domain/read/ReadResponseNumber";
 import { createReadThreadId } from "../domain/read/ReadThreadId";
-
-import type { DataNotFoundError, ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
 // スレッドIDを元に、最新のレスポンスを10個取得し、その内容を返す
 export const getLatest10ThreadsWithResponsesRepository = async (
   { sql, logger }: VakContext,
-  { threadIds }: { threadIds: WriteThreadId[] }
+  { threadIds }: { threadIds: WriteThreadId[] },
 ): Promise<
   Result<ReadResponse[], DatabaseError | DataNotFoundError | ValidationError>
 > => {
@@ -224,8 +224,8 @@ export const getLatest10ThreadsWithResponsesRepository = async (
     return err(
       new DatabaseError(
         `レスポンス取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

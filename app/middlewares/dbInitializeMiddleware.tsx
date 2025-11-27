@@ -1,8 +1,6 @@
+import type { Context, Env as HonoEnv, MiddlewareHandler } from "hono";
 import { env, getRuntimeKey } from "hono/adapter"; // 環境判定と環境変数取得
 import postgres from "postgres"; // postgres.js ライブラリ
-
-import type { MiddlewareHandler } from "hono";
-import type { Context, Env as HonoEnv } from "hono";
 
 /**
  * postgres.js の Sql クライアントインスタンスの型エイリアス
@@ -72,7 +70,7 @@ const initializeDbClientInternal = (
     postgresOptions: postgres.Options<Record<string, postgres.PostgresType>>;
     contextKey: string;
     isCloudflareWorkers: boolean; // 現在の環境がWorkersかどうか
-  }
+  },
 ): DbClient | null => {
   const { envKey, postgresOptions, contextKey, isCloudflareWorkers } = options;
   try {
@@ -87,7 +85,7 @@ const initializeDbClientInternal = (
     if (!databaseUrl) {
       // 接続文字列が見つからない場合はエラーログを出力し、nullを返す
       console.error(
-        `[${contextKey}] Error: Database connection string environment variable '${envKey}' not found.`
+        `[${contextKey}] Error: Database connection string environment variable '${envKey}' not found.`,
       );
       return null;
     }
@@ -102,7 +100,7 @@ const initializeDbClientInternal = (
       // 注意: Hyperdriveを使用する場合、maxはHyperdrive側で管理されるため、ここでの指定の影響は限定的です。
       //       Hyperdriveを使わない直接接続の場合、Workersでは少ない値(例: 1)が推奨されることがあります。
       max: isCloudflareWorkers
-        ? postgresOptions?.max ?? 1
+        ? (postgresOptions?.max ?? 1)
         : postgresOptions?.max, // Workers環境ではデフォルト1、それ以外は指定値 or デフォルト
       // --- その他の推奨オプション例 ---
       // idle_timeout: postgresOptions?.idle_timeout ?? 20, // アイドル接続のタイムアウト(秒)
@@ -121,14 +119,14 @@ const initializeDbClientInternal = (
     console.log(
       `[${contextKey}] Database client initialized successfully. (Environment: ${
         isCloudflareWorkers ? "Cloudflare Workers" : "Other"
-      }, Strategy: ${isCloudflareWorkers ? "Per-request" : "Shared Instance"})`
+      }, Strategy: ${isCloudflareWorkers ? "Per-request" : "Shared Instance"})`,
     );
     return client;
   } catch (error) {
     // エラーログを出力し、nullを返す
     console.error(
       `[${contextKey}] Failed to initialize database client:`,
-      error
+      error,
     );
     return null;
   }
@@ -149,7 +147,7 @@ const initializeDbClientInternal = (
  * @returns Honoミドルウェアハンドラ
  */
 export const dbClientMiddlewareConditional = <ContextKey extends string = "db">(
-  options?: DbMiddlewareOptions<ContextKey>
+  options?: DbMiddlewareOptions<ContextKey>,
 ): MiddlewareHandler<DbEnv<ContextKey> & HonoEnv> => {
   const contextKey = options?.contextKey ?? ("db" as ContextKey);
   const envKey = options?.envKey ?? "DATABASE_URL";
@@ -182,7 +180,7 @@ export const dbClientMiddlewareConditional = <ContextKey extends string = "db">(
           isInitializingSharedDb = true; // 簡易ロックを取得
           try {
             console.log(
-              `[${contextKey}] Initializing shared database client (non-worker)...`
+              `[${contextKey}] Initializing shared database client (non-worker)...`,
             );
             // グローバル変数に初期化結果を格納
             sharedDbClientInstance = initializeDbClientInternal(c, {
@@ -198,7 +196,7 @@ export const dbClientMiddlewareConditional = <ContextKey extends string = "db">(
         } else {
           // 他のリクエストが初期化中の場合 -> 待機（簡易ポーリング）
           console.log(
-            `[${contextKey}] Waiting for shared database client initialization (non-worker)...`
+            `[${contextKey}] Waiting for shared database client initialization (non-worker)...`,
           );
           let waitCount = 0;
           const maxWaitCount = 100; // 約5秒待機 (50ms * 100)
@@ -209,7 +207,7 @@ export const dbClientMiddlewareConditional = <ContextKey extends string = "db">(
           if (isInitializingSharedDb) {
             // 待機しても初期化が終わらない場合 (タイムアウト)
             console.error(
-              `[${contextKey}] Shared database client initialization timed out (non-worker).`
+              `[${contextKey}] Shared database client initialization timed out (non-worker).`,
             );
             clientToUse = null; // 利用可能なクライアントなし
           } else {
@@ -217,12 +215,12 @@ export const dbClientMiddlewareConditional = <ContextKey extends string = "db">(
             clientToUse = sharedDbClientInstance;
             if (clientToUse) {
               console.log(
-                `[${contextKey}] Obtained shared database client after waiting (non-worker).`
+                `[${contextKey}] Obtained shared database client after waiting (non-worker).`,
               );
             } else {
               // 初期化が終わったのにnull -> 初期化に失敗した可能性
               console.error(
-                `[${contextKey}] Shared database client is null after initialization finished (non-worker).`
+                `[${contextKey}] Shared database client is null after initialization finished (non-worker).`,
               );
             }
           }
@@ -242,7 +240,7 @@ export const dbClientMiddlewareConditional = <ContextKey extends string = "db">(
     } else {
       // 初期化に失敗した場合など、クライアントが利用不可
       console.error(
-        `[${contextKey}] Database client is not available for this request.`
+        `[${contextKey}] Database client is not available for this request.`,
       );
       // 必要に応じてここでエラーレスポンスを返し、処理を中断することも可能
       // 例: return c.text('Database service unavailable', 503);

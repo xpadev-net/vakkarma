@@ -1,13 +1,11 @@
 import { err, ok } from "neverthrow";
-
-import { getAllThreadsWithEpochIdRepository } from "../repositories/getAllThreadsWithEpochIdRepository";
-
 import type { BoardContext } from "../../board/types/BoardContext";
 import type { VakContext } from "../../shared/types/VakContext";
+import { getAllThreadsWithEpochIdRepository } from "../repositories/getAllThreadsWithEpochIdRepository";
 
 export const getAllThreadsWithEpochIdUsecase = async (
   vakContext: VakContext,
-  boardContext: BoardContext
+  boardContext: BoardContext,
 ) => {
   const { logger } = vakContext;
 

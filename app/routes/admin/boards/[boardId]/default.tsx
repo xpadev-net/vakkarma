@@ -8,12 +8,14 @@ export const POST = createRoute(async (c) => {
   const boardId = c.req.param("boardId");
 
   if (!boardId) {
-    return c.render(<ErrorMessage error={new Error("板IDが指定されていません")} />);
+    return c.render(
+      <ErrorMessage error={new Error("板IDが指定されていません")} />,
+    );
   }
 
   if (!sql) {
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -29,4 +31,3 @@ export default createRoute((c) => {
   c.status(405);
   return c.body(null);
 });
-

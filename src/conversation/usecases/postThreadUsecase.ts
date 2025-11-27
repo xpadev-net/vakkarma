@@ -1,5 +1,6 @@
 import { err, ok } from "neverthrow";
-
+import type { BoardContext } from "../../board/types/BoardContext";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createWriteAuthorName } from "../domain/write/WriteAuthorName";
 import { generateWriteHashId } from "../domain/write/WriteHashId";
 import { createWriteMail } from "../domain/write/WriteMail";
@@ -10,9 +11,6 @@ import { createWriteThread } from "../domain/write/WriteThread";
 import { createWriteThreadTitle } from "../domain/write/WriteThreadTitle";
 import { createResponseByThreadIdRepository } from "../repositories/createResponseByThreadIdRepository";
 import { createThreadRepository } from "../repositories/createThreadRepository";
-
-import type { BoardContext } from "../../board/types/BoardContext";
-import type { VakContext } from "../../shared/types/VakContext";
 
 // スレッドを投稿する際のユースケース
 export const postThreadUsecase = async (
@@ -31,7 +29,7 @@ export const postThreadUsecase = async (
     mailRaw: string | null;
     responseContentRaw: string;
     ipAddressRaw: string;
-  }
+  },
 ) => {
   const { logger } = vakContext;
 
@@ -74,7 +72,7 @@ export const postThreadUsecase = async (
         message: "Using default author name from board context",
       });
       return ok(boardContext.defaultAuthorName);
-    }
+    },
   );
   if (authorNameResult.isErr()) {
     logger.error({
@@ -120,7 +118,7 @@ export const postThreadUsecase = async (
       });
 
       return ok(boardContext.maxContentLength);
-    }
+    },
   );
   if (responseContentResult.isErr()) {
     logger.error({
@@ -211,7 +209,7 @@ export const postThreadUsecase = async (
   const responseResult = await createResponseByThreadIdRepository(
     vakContext,
     response.value,
-    { boardId: boardContext.boardId }
+    { boardId: boardContext.boardId },
   );
   if (responseResult.isErr()) {
     logger.error({

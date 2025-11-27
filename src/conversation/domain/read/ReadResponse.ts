@@ -1,5 +1,5 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
 import type { ReadAuthorName } from "./ReadAuthorName";
 import type { ReadHashId } from "./ReadHashId";
 import type { ReadMail } from "./ReadMail";
@@ -8,7 +8,6 @@ import type { ReadResponseContent } from "./ReadResponseContent";
 import type { ReadResponseId } from "./ReadResponseId";
 import type { ReadResponseNumber } from "./ReadResponseNumber";
 import type { ReadThreadId } from "./ReadThreadId";
-import type { Result } from "neverthrow";
 
 export type ReadResponse = {
   readonly _type: "ReadResponse";

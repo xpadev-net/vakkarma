@@ -1,20 +1,18 @@
-import { ok, err } from "neverthrow";
-
+import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
 import { DatabaseError } from "../../shared/types/Error";
-import { createReadResponseNumber } from "../domain/read/ReadResponseNumber";
-import { createReadThreadId } from "../domain/read/ReadThreadId";
-
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadResponseNumber } from "../domain/read/ReadResponseNumber";
+import { createReadResponseNumber } from "../domain/read/ReadResponseNumber";
 import type { ReadThreadId } from "../domain/read/ReadThreadId";
+import { createReadThreadId } from "../domain/read/ReadThreadId";
 import type { WriteResponse } from "../domain/write/WriteResponse";
-import type { Result } from "neverthrow";
 
 // レスポンスを作成するリポジトリ
 export const createResponseByThreadIdRepository = async (
   { sql, logger }: VakContext,
   response: WriteResponse,
-  { boardId }: { boardId: string }
+  { boardId }: { boardId: string },
 ): Promise<
   Result<
     {
@@ -135,8 +133,8 @@ export const createResponseByThreadIdRepository = async (
     return err(
       new DatabaseError(
         `レスポンス作成中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

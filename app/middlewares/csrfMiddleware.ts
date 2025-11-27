@@ -8,7 +8,7 @@ import { HTTPException } from "hono/http-exception";
 // import type { Context } from "../../context";
 // import type { MiddlewareHandler } from "../../types";
 
-import type { MiddlewareHandler, Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 
 type IsAllowedOriginHandler = (origin: string, context: Context) => boolean;
 interface CSRFOptions {
@@ -84,7 +84,7 @@ export const csrf = (options?: CSRFOptions): MiddlewareHandler => {
     if (
       !isSafeMethodRe.test(c.req.method) &&
       isRequestedByFormElementRe.test(
-        c.req.header("content-type") || "text/plain"
+        c.req.header("content-type") || "text/plain",
       ) &&
       !isAllowedOrigin(c.req.header("origin"), c)
     ) {

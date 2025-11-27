@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
-  generateWriteThreadEpochId,
   createWriteThreadEpochId,
+  generateWriteThreadEpochId,
 } from "./WriteThreadEpochId";
 
 describe("WriteThreadEpochId", () => {
@@ -45,7 +45,7 @@ describe("WriteThreadEpochId", () => {
         expect(result.isErr()).toBe(true);
         if (result.isErr()) {
           expect(result.error.message).toBe(
-            "ThreadEpochIdは数値である必要があります"
+            "ThreadEpochIdは数値である必要があります",
           );
         }
       });
@@ -57,7 +57,7 @@ describe("WriteThreadEpochId", () => {
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.message).toBe(
-          "ThreadEpochIdは空文字列にできません"
+          "ThreadEpochIdは空文字列にできません",
         );
       }
     });

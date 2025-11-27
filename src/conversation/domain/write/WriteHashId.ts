@@ -1,6 +1,6 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 
@@ -14,7 +14,7 @@ export type WriteHashId = {
 export const generateWriteHashId = (
   // そんなに必要な値という訳ではないので値オブジェクトを使わずにstringで
   ipAddress: string,
-  date: Date
+  date: Date,
 ): Result<WriteHashId, ValidationError> => {
   try {
     const hash = crypto
@@ -26,13 +26,13 @@ export const generateWriteHashId = (
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return err(
-      new ValidationError(`ハッシュIDの生成に失敗しました: ${message}`)
+      new ValidationError(`ハッシュIDの生成に失敗しました: ${message}`),
     );
   }
 };
 
 export const createWriteHashId = (
-  value: string
+  value: string,
 ): Result<WriteHashId, ValidationError> => {
   if (value.length !== 8) {
     return err(new ValidationError("ハッシュIDは8文字です"));

@@ -1,7 +1,7 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { ValidationError } from "../../shared/types/Error";
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -19,9 +19,6 @@ import {
   createReadThreadWithResponses,
   type ReadThreadWithResponses,
 } from "../domain/read/ReadThreadWithResponses";
-
-import type { ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteResponseNumber } from "../domain/write/WriteResponseNumber";
 import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
@@ -33,7 +30,7 @@ export const getLatestResponsesByThreadIdAndCountRepository = async (
     threadId,
     count,
     boardId,
-  }: { threadId: WriteThreadId; count: WriteResponseNumber; boardId: string }
+  }: { threadId: WriteThreadId; count: WriteResponseNumber; boardId: string },
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -226,7 +223,7 @@ export const getLatestResponsesByThreadIdAndCountRepository = async (
         threadId: threadId.val,
         responseId: firstResponse.id,
         error: new DataNotFoundError(
-          "スレッドの全レス件数が取得できませんでした"
+          "スレッドの全レス件数が取得できませんでした",
         ),
         message: "Failed to create domain objects from database result",
       });
@@ -238,7 +235,7 @@ export const getLatestResponsesByThreadIdAndCountRepository = async (
       threadIdResult.value,
       threadTitle,
       totalCount,
-      responses
+      responses,
     );
 
     if (threadWithResponsesResult.isErr()) {
@@ -271,8 +268,8 @@ export const getLatestResponsesByThreadIdAndCountRepository = async (
     return err(
       new DatabaseError(
         `最新レスポンス取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

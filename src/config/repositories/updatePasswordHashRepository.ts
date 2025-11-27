@@ -1,14 +1,12 @@
-import { ok, err } from "neverthrow";
-
+import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
 import { DatabaseError } from "../../shared/types/Error";
-
 import type { VakContext } from "../../shared/types/VakContext";
 import type { WritePasswordHash } from "../domain/write/WritePasswordHash";
-import type { Result } from "neverthrow";
 
 export const updatePasswordHashRepository = async (
   { sql, logger }: VakContext,
-  passwordHash: WritePasswordHash
+  passwordHash: WritePasswordHash,
 ): Promise<Result<undefined, Error>> => {
   logger.debug({
     operation: "updatePasswordHash",
@@ -41,8 +39,8 @@ export const updatePasswordHashRepository = async (
     return err(
       new DatabaseError(
         `パスワード更新中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

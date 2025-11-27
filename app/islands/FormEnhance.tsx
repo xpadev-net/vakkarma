@@ -25,7 +25,7 @@ export default function FormEnhance() {
     console.log("FormEnhance mounted");
     // Find the closest parent form element
     const findParentForm = (
-      element: HTMLElement | null
+      element: HTMLElement | null,
     ): HTMLFormElement | null => {
       let current: HTMLElement | null = element;
       while (current) {
@@ -50,7 +50,7 @@ export default function FormEnhance() {
     // Input validation and button state handling
     const handleSubmit = (e: SubmitEvent) => {
       const submitButton = form.querySelector(
-        'button[type="submit"]'
+        'button[type="submit"]',
       ) as HTMLButtonElement | null;
 
       // Disable button and change style on submit attempt
@@ -60,7 +60,7 @@ export default function FormEnhance() {
       }
 
       const mailInput = form.querySelector(
-        'input[name="mail"]'
+        'input[name="mail"]',
       ) as HTMLInputElement | null;
       // Only validate if mail input exists
       if (mailInput) {
@@ -74,7 +74,7 @@ export default function FormEnhance() {
           notyf.error(
             `メールアドレスの形式が正しくありません。<br>
             sageと空欄はOKです。
-            `
+            `,
           );
           // Re-enable button if validation fails
           if (submitButton) {
@@ -89,7 +89,7 @@ export default function FormEnhance() {
     // Ctrl+Enter to submit
     const handleKeyDown = (e: KeyboardEvent) => {
       const submitButton = form.querySelector(
-        'button[type="submit"]'
+        'button[type="submit"]',
       ) as HTMLButtonElement | null;
       if (submitButton?.disabled) {
         return;

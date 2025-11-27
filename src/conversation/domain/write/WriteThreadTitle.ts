@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 
@@ -11,7 +11,7 @@ export type WriteThreadTitle = {
 const titleRegex = /^[^<>]+$/;
 
 export const createWriteThreadTitle = (
-  value: string
+  value: string,
 ): Result<WriteThreadTitle, ValidationError> => {
   if (value.length === 0) {
     return err(new ValidationError("スレッドタイトルは必須です"));
@@ -22,7 +22,7 @@ export const createWriteThreadTitle = (
   // 使えない文字が含まれていないかチェック
   if (!titleRegex.test(value)) {
     return err(
-      new ValidationError("スレッドタイトルに使えない文字が含まれています")
+      new ValidationError("スレッドタイトルに使えない文字が含まれています"),
     );
   }
   return ok({ _type: "WriteThreadTitle", val: value });

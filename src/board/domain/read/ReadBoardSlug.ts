@@ -1,6 +1,5 @@
-import { err, ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -10,7 +9,7 @@ export type ReadBoardSlug = {
 };
 
 export const createReadBoardSlug = (
-  slug: string
+  slug: string,
 ): Result<ReadBoardSlug, Error> => {
   if (!slugRegex.test(slug)) {
     return err(new Error("掲示板スラッグが不正です"));
@@ -21,4 +20,3 @@ export const createReadBoardSlug = (
     val: slug,
   });
 };
-

@@ -6,7 +6,7 @@ export type ReadDefaultAuthorName = {
 };
 
 export const createReadDefaultAuthorName = (
-  defaultAuthorName: string
+  defaultAuthorName: string,
 ): Result<ReadDefaultAuthorName, Error> => {
   return ok({
     _type: "ReadDefaultAuthorName",

@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 import { uuidv7 } from "uuidv7";
 
 import { ValidationError } from "../../../shared/types/Error";
@@ -15,7 +15,7 @@ export const generateWriteThreadId = (): WriteThreadId => {
 };
 
 export const createWriteThreadId = (
-  value: string
+  value: string,
 ): Result<WriteThreadId, ValidationError> => {
   // UUIDv7のバリデーション
   if (!validateUUIDv7(value)) {

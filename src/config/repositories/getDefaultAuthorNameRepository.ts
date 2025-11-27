@@ -1,11 +1,13 @@
-import { err, ok } from "neverthrow";
-
-import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
-import { type ReadDefaultAuthorName } from "../domain/read/ReadDefaultAuthorName";
-
-import type { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
+
+import type {
+  DatabaseError,
+  DataNotFoundError,
+} from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
+import type { ReadDefaultAuthorName } from "../domain/read/ReadDefaultAuthorName";
 
 export const getDefaultAuthorNameRepository = async ({
   sql,

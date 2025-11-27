@@ -1,8 +1,6 @@
-import { err, ok } from "neverthrow";
-
-import { ValidationError } from "../../../shared/types/Error";
-
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { ValidationError } from "../../../shared/types/Error";
 
 export type ReadThreadEpochId = {
   readonly _type: "ReadThreadEpochId";
@@ -10,11 +8,11 @@ export type ReadThreadEpochId = {
 };
 
 export const createReadThreadEpochId = (
-  value: string
+  value: string,
 ): Result<ReadThreadEpochId, Error> => {
   // BIGINTを扱うため、数値に変換
   const epochId = Number(value);
-  if (isNaN(epochId)) {
+  if (Number.isNaN(epochId)) {
     return err(new ValidationError("ThreadEpochIdは数値である必要があります"));
   }
   return ok({

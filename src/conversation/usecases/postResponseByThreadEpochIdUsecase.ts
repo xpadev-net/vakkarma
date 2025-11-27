@@ -1,5 +1,8 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
+import type { BoardContext } from "../../board/types/BoardContext";
+import type { VakContext } from "../../shared/types/VakContext";
+import type { ReadThreadId } from "../domain/read/ReadThreadId";
 import { createWriteAuthorName } from "../domain/write/WriteAuthorName";
 import { generateWriteHashId } from "../domain/write/WriteHashId";
 import { createWriteMail, isSage } from "../domain/write/WriteMail";
@@ -11,11 +14,6 @@ import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { createResponseByThreadIdRepository } from "../repositories/createResponseByThreadIdRepository";
 import { getThreadIdByThreadEpochIdRepository } from "../repositories/getThreadIdByThreadEpochIdRepository";
 import { updateThreadUpdatedAtRepository } from "../repositories/updateThreadUpdatedAtRepository";
-
-import type { BoardContext } from "../../board/types/BoardContext";
-import type { VakContext } from "../../shared/types/VakContext";
-import type { ReadThreadId } from "../domain/read/ReadThreadId";
-import type { Result } from "neverthrow";
 
 // レスを投稿する際のユースケース
 export const postResponseByThreadEpochIdUsecase = async (
@@ -33,7 +31,7 @@ export const postResponseByThreadEpochIdUsecase = async (
     mailRaw: string | null;
     responseContentRaw: string;
     ipAddressRaw: string;
-  }
+  },
 ): Promise<Result<ReadThreadId, Error>> => {
   const { logger } = vakContext;
 
@@ -76,7 +74,7 @@ export const postResponseByThreadEpochIdUsecase = async (
     {
       threadEpochId: threadEpochIdResult.value,
       boardId: boardContext.boardId,
-    }
+    },
   );
   if (readThreadIdResult.isErr()) {
     logger.error({
@@ -118,7 +116,7 @@ export const postResponseByThreadEpochIdUsecase = async (
     authorNameRaw,
     async () => {
       return ok(boardContext.defaultAuthorName);
-    }
+    },
   );
   if (authorNameResult.isErr()) {
     logger.error({
@@ -160,7 +158,7 @@ export const postResponseByThreadEpochIdUsecase = async (
     responseContentRaw,
     async () => {
       return ok(boardContext.maxContentLength);
-    }
+    },
   );
   if (responseContentResult.isErr()) {
     logger.error({
@@ -234,7 +232,7 @@ export const postResponseByThreadEpochIdUsecase = async (
   const responseResult = await createResponseByThreadIdRepository(
     vakContext,
     response.value,
-    { boardId: boardContext.boardId }
+    { boardId: boardContext.boardId },
   );
   if (responseResult.isErr()) {
     logger.error({

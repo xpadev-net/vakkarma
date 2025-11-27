@@ -1,6 +1,5 @@
-import { err, ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
 
 const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -20,4 +19,3 @@ export const createReadBoardId = (id: string): Result<ReadBoardId, Error> => {
     val: id,
   });
 };
-

@@ -1,13 +1,11 @@
 import { compare } from "bcrypt-ts";
-import { ok, err } from "neverthrow";
-
-import { getPasswordHashRepository } from "../repositories/getPasswordHashRepository";
-
+import { err, ok } from "neverthrow";
 import type { VakContext } from "../../shared/types/VakContext";
+import { getPasswordHashRepository } from "../repositories/getPasswordHashRepository";
 
 export const verifyAdminPasswordUsecase = async (
   vakContext: VakContext,
-  inputPassword: string
+  inputPassword: string,
 ) => {
   const { logger } = vakContext;
 

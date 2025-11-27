@@ -1,6 +1,9 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-import { type ReadThreadId } from "../domain/read/ReadThreadId";
+import type { BoardContext } from "../../board/types/BoardContext";
+import type { VakContext } from "../../shared/types/VakContext";
+import type { ReadResponseNumber } from "../domain/read/ReadResponseNumber";
+import type { ReadThreadId } from "../domain/read/ReadThreadId";
 import { createWriteAuthorName } from "../domain/write/WriteAuthorName";
 import { generateWriteHashId } from "../domain/write/WriteHashId";
 import { createWriteMail, isSage } from "../domain/write/WriteMail";
@@ -10,11 +13,6 @@ import { createWriteResponseContent } from "../domain/write/WriteResponseContent
 import { createWriteThreadId } from "../domain/write/WriteThreadId";
 import { createResponseByThreadIdRepository } from "../repositories/createResponseByThreadIdRepository";
 import { updateThreadUpdatedAtRepository } from "../repositories/updateThreadUpdatedAtRepository";
-
-import type { BoardContext } from "../../board/types/BoardContext";
-import type { VakContext } from "../../shared/types/VakContext";
-import type { ReadResponseNumber } from "../domain/read/ReadResponseNumber";
-import type { Result } from "neverthrow";
 
 // レスを投稿する際のユースケース
 export const postResponseByThreadIdUsecase = async (
@@ -32,7 +30,7 @@ export const postResponseByThreadIdUsecase = async (
     mailRaw: string | null;
     responseContentRaw: string;
     ipAddressRaw: string;
-  }
+  },
 ): Promise<
   Result<
     {
@@ -83,7 +81,7 @@ export const postResponseByThreadIdUsecase = async (
         message: "Using default author name from board context",
       });
       return ok(boardContext.defaultAuthorName);
-    }
+    },
   );
   if (authorNameResult.isErr()) {
     logger.error({
@@ -128,7 +126,7 @@ export const postResponseByThreadIdUsecase = async (
         message: "Using max content length from board context",
       });
       return ok(boardContext.maxContentLength);
-    }
+    },
   );
   if (responseContentResult.isErr()) {
     logger.error({
@@ -194,7 +192,7 @@ export const postResponseByThreadIdUsecase = async (
   const responseResult = await createResponseByThreadIdRepository(
     vakContext,
     response.value,
-    { boardId: boardContext.boardId }
+    { boardId: boardContext.boardId },
   );
   if (responseResult.isErr()) {
     logger.error({

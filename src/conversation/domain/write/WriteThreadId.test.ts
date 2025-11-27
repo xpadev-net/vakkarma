@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { generateWriteThreadId, createWriteThreadId } from "./WriteThreadId";
+import { createWriteThreadId, generateWriteThreadId } from "./WriteThreadId";
 
 describe("WriteThreadId", () => {
   describe("generateWriteThreadId", () => {
@@ -10,7 +10,7 @@ describe("WriteThreadId", () => {
       expect(threadId._type).toBe("WriteThreadId");
       // UUIDv7の形式チェック（36文字でハイフンを含む）
       expect(threadId.val).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
       );
     });
 

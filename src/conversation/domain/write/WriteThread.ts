@@ -1,13 +1,11 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-import { generateWriteThreadEpochId } from "./WriteThreadEpochId";
-import { generateWriteThreadId } from "./WriteThreadId";
-
 import type { WritePostedAt } from "./WritePostedAt";
 import type { WriteThreadEpochId } from "./WriteThreadEpochId";
+import { generateWriteThreadEpochId } from "./WriteThreadEpochId";
 import type { WriteThreadId } from "./WriteThreadId";
+import { generateWriteThreadId } from "./WriteThreadId";
 import type { WriteThreadTitle } from "./WriteThreadTitle";
-import type { Result } from "neverthrow";
 
 export type WriteThread = {
   readonly _type: "WriteThread";

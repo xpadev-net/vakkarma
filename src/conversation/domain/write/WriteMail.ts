@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 
@@ -12,10 +12,10 @@ export type WriteMail = {
 
 // https://zenn.dev/igz0/articles/email-validation-regex-best-practices
 const regexMail =
-  /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 export const createWriteMail = (
-  value: string | null
+  value: string | null,
 ): Result<WriteMail, ValidationError> => {
   if (value === null) {
     return ok({ _type: "WriteMail", val: "" });

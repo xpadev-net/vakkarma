@@ -1,13 +1,12 @@
 import { compare } from "bcrypt-ts";
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createWritePassword } from "../domain/write/WritePassword";
 import { generateWritePasswordHash } from "../domain/write/WritePasswordHash";
 import { getPasswordHashRepository } from "../repositories/getPasswordHashRepository";
 import { updatePasswordHashRepository } from "../repositories/updatePasswordHashRepository";
-
-import type { VakContext } from "../../shared/types/VakContext";
 
 export const updatePasswordUsecase = async (
   vakContext: VakContext,
@@ -15,7 +14,7 @@ export const updatePasswordUsecase = async (
     oldPassword,
     newPassword,
     confirmNewPassword,
-  }: { oldPassword: string; newPassword: string; confirmNewPassword: string }
+  }: { oldPassword: string; newPassword: string; confirmNewPassword: string },
 ): Promise<Result<undefined, Error>> => {
   const { logger } = vakContext;
 
@@ -31,7 +30,7 @@ export const updatePasswordUsecase = async (
         "Password update failed: new password and confirmation do not match",
     });
     return err(
-      new ValidationError("新しいパスワードと確認パスワードが一致しません")
+      new ValidationError("新しいパスワードと確認パスワードが一致しません"),
     );
   }
 
@@ -86,7 +85,7 @@ export const updatePasswordUsecase = async (
   });
 
   const newHashResult = await generateWritePasswordHash(
-    newPasswordResult.value
+    newPasswordResult.value,
   );
   if (newHashResult.isErr()) {
     logger.error({
@@ -104,7 +103,7 @@ export const updatePasswordUsecase = async (
 
   const updateResult = await updatePasswordHashRepository(
     vakContext,
-    newHashResult.value
+    newHashResult.value,
   );
   if (updateResult.isErr()) {
     logger.error({

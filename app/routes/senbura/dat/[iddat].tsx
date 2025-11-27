@@ -26,18 +26,18 @@ export default createRoute(async (c) => {
   const boardContextResult = await resolveBoardContext(vakContext, boardSlug);
   if (boardContextResult.isErr()) {
     return convertShiftJis(
-      `エラーが発生しました: ${boardContextResult.error.message}`
+      `エラーが発生しました: ${boardContextResult.error.message}`,
     );
   }
 
   const responsesResult = await getAllResponsesByThreadEpochIdUsecase(
     vakContext,
     boardContextResult.value,
-    { threadEpochIdRaw: id }
+    { threadEpochIdRaw: id },
   );
   if (responsesResult.isErr()) {
     return convertShiftJis(
-      `エラーが発生しました: ${responsesResult.error.message}`
+      `エラーが発生しました: ${responsesResult.error.message}`,
     );
   }
 

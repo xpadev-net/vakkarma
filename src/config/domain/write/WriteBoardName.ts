@@ -1,8 +1,6 @@
-import { err, ok } from "neverthrow";
-
-import { ValidationError } from "../../../shared/types/Error";
-
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { ValidationError } from "../../../shared/types/Error";
 
 export type WriteBoardName = {
   readonly _type: "WriteBoardName";
@@ -10,7 +8,7 @@ export type WriteBoardName = {
 };
 
 export const createWriteBoardName = (
-  value: string
+  value: string,
 ): Result<WriteBoardName, ValidationError> => {
   if (value.length === 0) {
     return err(new ValidationError("ボード名は必須です"));

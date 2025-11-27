@@ -1,6 +1,5 @@
-import { ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { ok } from "neverthrow";
 
 export type ReadLocalRule = {
   readonly _type: "ReadLocalRule";
@@ -8,7 +7,7 @@ export type ReadLocalRule = {
 };
 
 export const createReadLocalRule = (
-  localRule: string
+  localRule: string,
 ): Result<ReadLocalRule, Error> => {
   return ok({
     _type: "ReadLocalRule",

@@ -1,10 +1,8 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
 import { uuidv7 } from "uuidv7";
-
 import { ValidationError } from "../../../shared/types/Error";
 import { validateUUIDv7 } from "../../../shared/utils/validateUUIDv7";
-
-import type { Result } from "neverthrow";
 
 export type WriteBoardId = {
   readonly _type: "WriteBoardId";
@@ -19,7 +17,7 @@ export const generateWriteBoardId = (): WriteBoardId => {
 };
 
 export const createWriteBoardId = (
-  id: string
+  id: string,
 ): Result<WriteBoardId, ValidationError> => {
   if (!validateUUIDv7(id)) {
     return err(new ValidationError("不正な掲示板IDです"));
@@ -30,4 +28,3 @@ export const createWriteBoardId = (
     val: id,
   });
 };
-

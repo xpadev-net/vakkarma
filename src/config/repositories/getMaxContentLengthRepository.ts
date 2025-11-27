@@ -1,11 +1,13 @@
-import { err, ok } from "neverthrow";
-
-import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
-import { type ReadMaxContentLength } from "../domain/read/ReadMaxContentLength";
-
-import type { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { getDefaultBoardRepository } from "../../board/repositories/getDefaultBoardRepository";
+
+import type {
+  DatabaseError,
+  DataNotFoundError,
+} from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
+import type { ReadMaxContentLength } from "../domain/read/ReadMaxContentLength";
 
 export const getMaxContentLengthRepository = async ({
   sql,

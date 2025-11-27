@@ -1,13 +1,11 @@
-import { ok, err } from "neverthrow";
-
+import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
 import { DatabaseError } from "../../shared/types/Error";
-import { createReadThreadId } from "../domain/read/ReadThreadId";
-import { type WriteThreadId } from "../domain/write/WriteThreadId";
-
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadThreadId } from "../domain/read/ReadThreadId";
+import { createReadThreadId } from "../domain/read/ReadThreadId";
 import type { WritePostedAt } from "../domain/write/WritePostedAt";
-import type { Result } from "neverthrow";
+import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
 // スレッドのupdated_atを更新するリポジトリ
 // ThreadId・updatedAtを受け取る。
@@ -18,7 +16,7 @@ export const updateThreadUpdatedAtRepository = async (
     threadId,
     updatedAt,
     boardId,
-  }: { threadId: WriteThreadId; updatedAt: WritePostedAt; boardId: string }
+  }: { threadId: WriteThreadId; updatedAt: WritePostedAt; boardId: string },
 ): Promise<Result<ReadThreadId, DatabaseError>> => {
   logger.debug({
     operation: "updateThreadUpdatedAt",
@@ -75,7 +73,7 @@ export const updateThreadUpdatedAtRepository = async (
       message: `Database error while updating thread timestamp: ${message}`,
     });
     return err(
-      new DatabaseError(`更新処理中にエラーが発生しました: ${message}`, error)
+      new DatabaseError(`更新処理中にエラーが発生しました: ${message}`, error),
     );
   }
 };

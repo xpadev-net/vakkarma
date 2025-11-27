@@ -1,13 +1,12 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+
+import type { VakContext } from "../../shared/types/VakContext";
 import {
   createReadPasswordHash,
   type ReadPasswordHash,
 } from "../domain/read/ReadPasswordHash";
-
-import type { VakContext } from "../../shared/types/VakContext";
-import type { Result } from "neverthrow";
 
 export const getPasswordHashRepository = async ({
   sql,
@@ -65,7 +64,7 @@ export const getPasswordHashRepository = async ({
       message: `Database error while fetching admin password hash: ${message}`,
     });
     return err(
-      new DatabaseError(`設定取得中にエラーが発生しました: ${message}`, error)
+      new DatabaseError(`設定取得中にエラーが発生しました: ${message}`, error),
     );
   }
 };

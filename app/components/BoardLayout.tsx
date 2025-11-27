@@ -1,8 +1,6 @@
-
-import { BoardSidebar } from "./BoardSidebar";
-
-import type { BoardLink } from "./boardTypes";
 import type { Child, FC } from "hono/jsx";
+import { BoardSidebar } from "./BoardSidebar";
+import type { BoardLink } from "./boardTypes";
 
 type BoardLayoutProps = {
   boards: BoardLink[];
@@ -26,4 +24,3 @@ export const BoardLayout: FC<BoardLayoutProps> = ({
     </div>
   );
 };
-

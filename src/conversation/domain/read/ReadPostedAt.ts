@@ -1,6 +1,5 @@
-import { ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { ok } from "neverthrow";
 
 export type ReadPostedAt = {
   readonly _type: "ReadPostedAt";
@@ -8,7 +7,7 @@ export type ReadPostedAt = {
 };
 
 export const createReadPostedAt = (
-  postedAt: Date
+  postedAt: Date,
 ): Result<ReadPostedAt, Error> => {
   return ok({
     _type: "ReadPostedAt",

@@ -8,12 +8,14 @@ export const POST = createRoute(async (c) => {
   const boardId = c.req.param("boardId");
 
   if (!boardId) {
-    return c.render(<ErrorMessage error={new Error("板IDが指定されていません")} />);
+    return c.render(
+      <ErrorMessage error={new Error("板IDが指定されていません")} />,
+    );
   }
 
   if (!sql) {
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
 
@@ -22,16 +24,14 @@ export const POST = createRoute(async (c) => {
     typeof body.nextState === "string" ? body.nextState.toLowerCase() : null;
 
   if (nextState !== "inactive" && nextState !== "active") {
-    return c.render(
-      <ErrorMessage error={new Error("nextState が不正です")} />
-    );
+    return c.render(<ErrorMessage error={new Error("nextState が不正です")} />);
   }
 
   const isActive = nextState !== "inactive";
 
   const result = await setBoardActiveStateUsecase(
     { sql, logger },
-    { boardId, isActive }
+    { boardId, isActive },
   );
 
   if (result.isErr()) {
@@ -45,4 +45,3 @@ export default createRoute((c) => {
   c.status(405);
   return c.body(null);
 });
-

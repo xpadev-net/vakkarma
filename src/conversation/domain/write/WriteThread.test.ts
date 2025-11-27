@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteThread } from "./WriteThread";
 
@@ -32,13 +32,13 @@ describe("WriteThread", () => {
       // 自動生成されるIDフィールドの検証
       expect(thread.id._type).toBe("WriteThreadId");
       expect(thread.id.val).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
       ); // UUIDv7形式
 
       // epochIdの検証
       expect(thread.epochId._type).toBe("WriteThreadEpochId");
       expect(thread.epochId.val).toBe(
-        Math.floor(mockPostedAt.val.getTime() / 1000)
+        Math.floor(mockPostedAt.val.getTime() / 1000),
       ); // 秒単位のタイムスタンプ
     }
   });

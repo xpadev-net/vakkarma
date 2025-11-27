@@ -1,17 +1,14 @@
-
+import type { FC } from "hono/jsx";
+import type { BoardContext } from "../../src/board/types/BoardContext";
 import { formatReadAuthorName } from "../../src/conversation/domain/read/ReadAuthorName";
+import type { ReadResponse } from "../../src/conversation/domain/read/ReadResponse";
+import type { ReadThreadWithResponses } from "../../src/conversation/domain/read/ReadThreadWithResponses";
 import { isSage } from "../../src/conversation/domain/write/WriteMail";
 import { formatDate } from "../../src/shared/utils/formatDate";
 import FormEnhance from "../islands/FormEnhance";
-
 import { BoardLayout } from "./BoardLayout";
-import { ResponseContentComponent } from "./ResponseContent";
-
 import type { BoardLink } from "./boardTypes";
-import type { BoardContext } from "../../src/board/types/BoardContext";
-import type { ReadResponse } from "../../src/conversation/domain/read/ReadResponse";
-import type { ReadThreadWithResponses } from "../../src/conversation/domain/read/ReadThreadWithResponses";
-import type { FC } from "hono/jsx";
+import { ResponseContentComponent } from "./ResponseContent";
 
 type ThreadPageProps = {
   boardContext: BoardContext;
@@ -161,4 +158,3 @@ export const ThreadPage: FC<ThreadPageProps> = ({
     </BoardLayout>
   );
 };
-

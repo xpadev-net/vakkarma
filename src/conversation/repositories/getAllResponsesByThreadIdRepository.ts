@@ -1,7 +1,7 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { ValidationError } from "../../shared/types/Error";
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -19,16 +19,13 @@ import {
   createReadThreadWithResponses,
   type ReadThreadWithResponses,
 } from "../domain/read/ReadThreadWithResponses";
-
-import type { ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
 // 指定されたスレッドのすべてのレスポンスを取得するだけのリポジトリ
 // 便宜上、スレッドタイトルも取得する
 export const getAllResponsesByThreadIdRepository = async (
   { sql, logger }: VakContext,
-  { threadId, boardId }: { threadId: WriteThreadId; boardId: string }
+  { threadId, boardId }: { threadId: WriteThreadId; boardId: string },
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -193,7 +190,7 @@ export const getAllResponsesByThreadIdRepository = async (
         message: "Total count not found in database result",
       });
       return err(
-        new DataNotFoundError("スレッドのレスポンス件数が取得できませんでした")
+        new DataNotFoundError("スレッドのレスポンス件数が取得できませんでした"),
       );
     }
     const totalCount = result[0].total_count; // from resp_count
@@ -201,7 +198,7 @@ export const getAllResponsesByThreadIdRepository = async (
       threadIdResult.value,
       threadTitleResult.value,
       totalCount,
-      responses
+      responses,
     );
 
     if (threadWithResponsesResult.isErr()) {
@@ -234,8 +231,8 @@ export const getAllResponsesByThreadIdRepository = async (
     return err(
       new DatabaseError(
         `レスポンス取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

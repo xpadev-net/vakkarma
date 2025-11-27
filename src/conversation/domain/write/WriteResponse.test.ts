@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteResponse } from "./WriteResponse";
 
@@ -48,13 +48,13 @@ describe("WriteResponse", () => {
       // 自動生成されるIDフィールドの検証
       expect(response.id._type).toBe("WriteResponseId");
       expect(response.id.val).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
       ); // UUIDv7形式
 
       // スレッドIDの検証
       expect(response.threadId._type).toBe("WriteThreadId");
       expect(response.threadId.val).toBe(
-        "01890c08-4754-7d1c-89aa-beee49bf4ffe"
+        "01890c08-4754-7d1c-89aa-beee49bf4ffe",
       );
     }
   });

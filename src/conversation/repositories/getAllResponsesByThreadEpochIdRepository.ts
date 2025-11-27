@@ -1,7 +1,7 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { ValidationError } from "../../shared/types/Error";
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -19,9 +19,6 @@ import {
   createReadThreadWithResponses,
   type ReadThreadWithResponses,
 } from "../domain/read/ReadThreadWithResponses";
-
-import type { ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteThreadEpochId } from "../domain/write/WriteThreadEpochId";
 
 // 指定されたスレッドのすべてのレスポンスを取得するだけのリポジトリ
@@ -31,7 +28,7 @@ export const getAllResponsesByThreadEpochIdRepository = async (
   {
     threadEpochId,
     boardId,
-  }: { threadEpochId: WriteThreadEpochId; boardId: string }
+  }: { threadEpochId: WriteThreadEpochId; boardId: string },
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -202,7 +199,7 @@ export const getAllResponsesByThreadEpochIdRepository = async (
         message: "Total count is null",
       });
       return err(
-        new DataNotFoundError("スレッドのレスポンス数が取得できませんでした")
+        new DataNotFoundError("スレッドのレスポンス数が取得できませんでした"),
       );
     }
     const totalCount = result[0].total_count;
@@ -211,7 +208,7 @@ export const getAllResponsesByThreadEpochIdRepository = async (
       threadId,
       threadTitle,
       totalCount,
-      responses
+      responses,
     );
 
     if (threadWithResponsesResult.isErr()) {
@@ -246,8 +243,8 @@ export const getAllResponsesByThreadEpochIdRepository = async (
     return err(
       new DatabaseError(
         `レスポンス取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

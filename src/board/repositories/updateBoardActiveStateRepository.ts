@@ -1,15 +1,10 @@
 import { err, ok, type Result } from "neverthrow";
 
-import {
-  DatabaseError,
-  DataNotFoundError,
-} from "../../shared/types/Error";
-
-import { mapBoardRecordToDomain } from "./boardRecordMapper";
-
-import type { BoardRecord } from "./boardRecordMapper";
+import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import type { BoardRecord } from "./boardRecordMapper";
+import { mapBoardRecordToDomain } from "./boardRecordMapper";
 
 export const updateBoardActiveStateRepository = async (
   { sql, logger }: VakContext,
@@ -19,7 +14,7 @@ export const updateBoardActiveStateRepository = async (
   }: {
     boardId: string;
     isActive: boolean;
-  }
+  },
 ): Promise<Result<ReadBoard, DatabaseError | DataNotFoundError | Error>> => {
   logger.debug({
     operation: "updateBoardActiveStateRepository",
@@ -86,9 +81,8 @@ export const updateBoardActiveStateRepository = async (
     return err(
       new DatabaseError(
         `掲示板の状態更新中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };
-

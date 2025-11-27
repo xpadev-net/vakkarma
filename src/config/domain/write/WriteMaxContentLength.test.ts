@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteMaxContentLength } from "./WriteMaxContentLength";
 
@@ -17,7 +17,7 @@ describe("WriteMaxContentLength", () => {
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.message).toBe(
-        "コンテンツの最大長は0より大きい必要があります"
+        "コンテンツの最大長は0より大きい必要があります",
       );
     }
   });
@@ -27,7 +27,7 @@ describe("WriteMaxContentLength", () => {
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.message).toBe(
-        "コンテンツの最大長は0より大きい必要があります"
+        "コンテンツの最大長は0より大きい必要があります",
       );
     }
   });

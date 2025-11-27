@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 
@@ -13,7 +13,7 @@ export type WritePassword = {
 //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
 
 export const createWritePassword = async (
-  value: string
+  value: string,
   //   getIsPasswordStrength: () => Promise<Result<boolean, Error>>
 ): Promise<Result<WritePassword, ValidationError>> => {
   if (value.length === 0) {

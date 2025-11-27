@@ -1,4 +1,4 @@
-import { ok, err, type Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { ValidationError } from "../../../shared/types/Error";
 import { createTrip } from "../../../shared/utils/createTrip";
@@ -25,7 +25,7 @@ export type WriteAuthorName = {
 export const createWriteAuthorName = async (
   authorName: string | null,
   // 高階関数パターンで、より低レイヤの処理を隠蔽できるようにする
-  getDefaultAuthorName: () => Promise<Result<string, Error>>
+  getDefaultAuthorName: () => Promise<Result<string, Error>>,
 ): Promise<Result<WriteAuthorName, ValidationError>> => {
   if (!authorName) {
     const nanashiName = await getDefaultAuthorName();

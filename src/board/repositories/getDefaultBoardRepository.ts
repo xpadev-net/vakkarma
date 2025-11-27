@@ -1,12 +1,10 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
-
-import { mapBoardRecordToDomain, type BoardRecord } from "./boardRecordMapper";
 
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
-import type { Result } from "neverthrow";
+import { type BoardRecord, mapBoardRecordToDomain } from "./boardRecordMapper";
 
 export const getDefaultBoardRepository = async ({
   sql,
@@ -78,10 +76,8 @@ export const getDefaultBoardRepository = async ({
     return err(
       new DatabaseError(
         `デフォルト板取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };
-
-

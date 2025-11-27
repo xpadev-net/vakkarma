@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteThreadTitle } from "./WriteThreadTitle";
 
@@ -51,7 +51,7 @@ describe("WriteThreadTitle", () => {
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.message).toBe(
-          "スレッドタイトルに使えない文字が含まれています"
+          "スレッドタイトルに使えない文字が含まれています",
         );
       }
     });

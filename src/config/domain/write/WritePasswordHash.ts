@@ -1,10 +1,8 @@
 import { hash } from "bcrypt-ts";
-import { ok, err } from "neverthrow";
-
-import { ValidationError } from "../../../shared/types/Error";
-
-import type { WritePassword } from "./WritePassword";
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { ValidationError } from "../../../shared/types/Error";
+import type { WritePassword } from "./WritePassword";
 
 export type WritePasswordHash = {
   readonly _type: "WritePasswordHash";
@@ -12,7 +10,7 @@ export type WritePasswordHash = {
 };
 
 export const generateWritePasswordHash = async (
-  password: WritePassword
+  password: WritePassword,
 ): Promise<Result<WritePasswordHash, ValidationError>> => {
   try {
     const hashedPassword = await hash(password.val, 10);
@@ -20,7 +18,7 @@ export const generateWritePasswordHash = async (
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return err(
-      new ValidationError(`パスワードのハッシュ化に失敗しました: ${message}`)
+      new ValidationError(`パスワードのハッシュ化に失敗しました: ${message}`),
     );
   }
 };

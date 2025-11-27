@@ -15,7 +15,7 @@ export const jwtAuthMiddleware = () => {
       return c.render(
         <ErrorMessage
           error={new Error("JWT_SECRET_KEYが設定されていません。")}
-        />
+        />,
       );
     }
 

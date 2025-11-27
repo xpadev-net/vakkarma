@@ -66,7 +66,6 @@ export default createRoute(async (c) => {
       threadTop30={topPageResult.value.threadTop30}
       responsesTop10={topPageResult.value.responsesTop10}
       acceptLanguage={c.req.header("Accept-Language") ?? undefined}
-    />
+    />,
   );
 });
-

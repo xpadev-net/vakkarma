@@ -1,12 +1,10 @@
 import { err, ok, type Result } from "neverthrow";
-
-import { listBoardsRepository } from "../repositories/listBoardsRepository";
-
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
+import { listBoardsRepository } from "../repositories/listBoardsRepository";
 
 export const listBoardsUsecase = async (
-  vakContext: VakContext
+  vakContext: VakContext,
 ): Promise<Result<ReadBoard[], Error>> => {
   const boardsResult = await listBoardsRepository(vakContext);
 
@@ -16,4 +14,3 @@ export const listBoardsUsecase = async (
 
   return ok(boardsResult.value);
 };
-

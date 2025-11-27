@@ -1,17 +1,15 @@
 import { err, ok, type Result } from "neverthrow";
 
 import { DatabaseError } from "../../shared/types/Error";
-
-import { mapBoardRecordToDomain } from "./boardRecordMapper";
-
-import type { BoardRecord } from "./boardRecordMapper";
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoard } from "../domain/read/ReadBoard";
 import type { WriteBoard } from "../domain/write/WriteBoard";
+import type { BoardRecord } from "./boardRecordMapper";
+import { mapBoardRecordToDomain } from "./boardRecordMapper";
 
 export const createBoardRepository = async (
   { sql, logger }: VakContext,
-  board: WriteBoard
+  board: WriteBoard,
 ): Promise<Result<ReadBoard, DatabaseError | Error>> => {
   logger.debug({
     operation: "createBoardRepository",
@@ -94,9 +92,8 @@ export const createBoardRepository = async (
     return err(
       new DatabaseError(
         `掲示板の作成中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };
-

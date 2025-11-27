@@ -1,13 +1,12 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-import { getBoardConfigRepository } from "../repositories/getBoardConfigRepository";
 
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadBoardConfig } from "../domain/read/ReadBoardConfig";
-import type { Result } from "neverthrow";
+import { getBoardConfigRepository } from "../repositories/getBoardConfigRepository";
 
 export const getBoardConfigUsecase = async (
-  vakContext: VakContext
+  vakContext: VakContext,
 ): Promise<Result<ReadBoardConfig, Error>> => {
   const { logger } = vakContext;
 

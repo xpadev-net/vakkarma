@@ -1,21 +1,21 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type {
+  DataNotFoundError,
+  ValidationError,
+} from "../../shared/types/Error";
 import { DatabaseError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadPostedAt } from "../domain/read/ReadPostedAt";
 import { createReadThread, type ReadThread } from "../domain/read/ReadThread";
 import { createReadThreadId } from "../domain/read/ReadThreadId";
 import { createReadThreadTitle } from "../domain/read/ReadThreadTitle";
-
-import type { DataNotFoundError, ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 
 // updated_atが新しい順に30個のスレッドを取得
 // かつ、新しい先頭の10個は、レスポンスの内容も含めて取得
 // レスポンスの内容は、先頭のレスポンス一つと、posted_atが新しい順に10個
 export const getLatest30ThreadsRepository = async (
   { sql, logger }: VakContext,
-  { boardId }: { boardId: string }
+  { boardId }: { boardId: string },
 ): Promise<
   Result<ReadThread[], DatabaseError | DataNotFoundError | ValidationError>
 > => {
@@ -129,8 +129,8 @@ export const getLatest30ThreadsRepository = async (
     return err(
       new DatabaseError(
         `スレッド取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

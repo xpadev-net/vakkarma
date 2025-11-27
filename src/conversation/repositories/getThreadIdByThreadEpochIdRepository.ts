@@ -1,18 +1,17 @@
+import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
-
-import { createReadThreadId } from "../domain/read/ReadThreadId";
 
 import type { VakContext } from "../../shared/types/VakContext";
 import type { ReadThreadId } from "../domain/read/ReadThreadId";
+import { createReadThreadId } from "../domain/read/ReadThreadId";
 import type { WriteThreadEpochId } from "../domain/write/WriteThreadEpochId";
-import type { Result } from "neverthrow";
 
 export const getThreadIdByThreadEpochIdRepository = async (
   { sql, logger }: VakContext,
   {
     threadEpochId,
     boardId,
-  }: { threadEpochId: WriteThreadEpochId; boardId: string }
+  }: { threadEpochId: WriteThreadEpochId; boardId: string },
 ): Promise<Result<ReadThreadId, Error>> => {
   logger.debug({
     operation: "getThreadIdByThreadEpochId",

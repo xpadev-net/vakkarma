@@ -1,17 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteLocalRule } from "./WriteLocalRule";
 
 describe("WriteLocalRule", () => {
   it("正常な値で作成できること", () => {
     const result = createWriteLocalRule(
-      "このボードではマナーを守って投稿してください"
+      "このボードではマナーを守って投稿してください",
     );
     expect(result.isOk()).toBe(true);
     if (result.isOk()) {
       expect(result.value._type).toBe("WriteLocalRule");
       expect(result.value.val).toBe(
-        "このボードではマナーを守って投稿してください"
+        "このボードではマナーを守って投稿してください",
       );
     }
   });
@@ -30,7 +30,7 @@ describe("WriteLocalRule", () => {
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.message).toBe(
-        "ローカルルールは100文字以内で入力してください"
+        "ローカルルールは100文字以内で入力してください",
       );
     }
   });

@@ -1,19 +1,18 @@
-import { ok, err } from "neverthrow";
-
+import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
 import { DatabaseError } from "../../shared/types/Error";
+
+import type { VakContext } from "../../shared/types/VakContext";
 import {
   createReadThreadId,
   type ReadThreadId,
 } from "../domain/read/ReadThreadId";
-
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteThread } from "../domain/write/WriteThread";
-import type { Result } from "neverthrow";
 
 // スレッドを作成するリポジトリ
 export const createThreadRepository = async (
   { sql, logger }: VakContext,
-  thread: WriteThread
+  thread: WriteThread,
 ): Promise<Result<ReadThreadId, DatabaseError>> => {
   logger.debug({
     operation: "createThread",
@@ -79,7 +78,7 @@ export const createThreadRepository = async (
       message: `Database error while creating thread: ${message}`,
     });
     return err(
-      new DatabaseError(`データベースエラーが発生しました: ${message}`, error)
+      new DatabaseError(`データベースエラーが発生しました: ${message}`, error),
     );
   }
 };

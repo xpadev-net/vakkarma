@@ -1,7 +1,7 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { ValidationError } from "../../shared/types/Error";
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -19,9 +19,6 @@ import {
   createReadThreadWithResponses,
   type ReadThreadWithResponses,
 } from "../domain/read/ReadThreadWithResponses";
-
-import type { ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteResponseNumber } from "../domain/write/WriteResponseNumber";
 import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
@@ -37,7 +34,7 @@ export const getResponseByThreadIdAndResNumRepository = async (
     threadId: WriteThreadId;
     responseNumber: WriteResponseNumber;
     boardId: string;
-  }
+  },
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -103,7 +100,7 @@ export const getResponseByThreadIdAndResNumRepository = async (
           "Response not found for the given thread ID and response number",
       });
       return err(
-        new DataNotFoundError("指定されたレスポンスの取得に失敗しました")
+        new DataNotFoundError("指定されたレスポンスの取得に失敗しました"),
       );
     }
 
@@ -187,12 +184,12 @@ export const getResponseByThreadIdAndResNumRepository = async (
         threadId: threadId.val,
         responseNumber: responseNumber.val,
         error: new DataNotFoundError(
-          "スレッドの全レス件数が取得できませんでした"
+          "スレッドの全レス件数が取得できませんでした",
         ),
         message: "Failed to get total count of responses",
       });
       return err(
-        new DataNotFoundError("スレッドの全レス件数が取得できませんでした")
+        new DataNotFoundError("スレッドの全レス件数が取得できませんでした"),
       );
     }
     const totalCount = response.total_count;
@@ -201,7 +198,7 @@ export const getResponseByThreadIdAndResNumRepository = async (
       readThreadId,
       threadTitle,
       totalCount,
-      responses
+      responses,
     );
 
     if (threadWithResponsesResult.isErr()) {
@@ -237,8 +234,8 @@ export const getResponseByThreadIdAndResNumRepository = async (
     return err(
       new DatabaseError(
         `レスポンス取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

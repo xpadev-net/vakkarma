@@ -1,7 +1,7 @@
-import { ok, err } from "neverthrow";
-import { Result } from "neverthrow";
-
+import { err, ok, Result } from "neverthrow";
+import type { ValidationError } from "../../shared/types/Error";
 import { DatabaseError, DataNotFoundError } from "../../shared/types/Error";
+import type { VakContext } from "../../shared/types/VakContext";
 import { createReadAuthorName } from "../domain/read/ReadAuthorName";
 import { createReadHashId } from "../domain/read/ReadHashId";
 import { createReadMail } from "../domain/read/ReadMail";
@@ -19,9 +19,6 @@ import {
   createReadThreadWithResponses,
   type ReadThreadWithResponses,
 } from "../domain/read/ReadThreadWithResponses";
-
-import type { ValidationError } from "../../shared/types/Error";
-import type { VakContext } from "../../shared/types/VakContext";
 import type { WriteResponseNumber } from "../domain/write/WriteResponseNumber";
 import type { WriteThreadId } from "../domain/write/WriteThreadId";
 
@@ -39,7 +36,7 @@ export const getResponseByThreadIdAndResNumRangeRepository = async (
     startResponseNumber: WriteResponseNumber | null;
     endResponseNumber: WriteResponseNumber | null;
     boardId: string;
-  }
+  },
 ): Promise<
   Result<
     ReadThreadWithResponses,
@@ -116,7 +113,7 @@ export const getResponseByThreadIdAndResNumRangeRepository = async (
         message: "No responses found for thread within specified range",
       });
       return err(
-        new DataNotFoundError("指定された範囲のレスポンスの取得に失敗しました")
+        new DataNotFoundError("指定された範囲のレスポンスの取得に失敗しました"),
       );
     }
 
@@ -221,12 +218,12 @@ export const getResponseByThreadIdAndResNumRangeRepository = async (
         startResponseNumber: startResponseNumber?.val ?? "NULL",
         endResponseNumber: endResponseNumber?.val ?? "NULL",
         error: new DataNotFoundError(
-          "スレッドの全レス件数が取得できませんでした"
+          "スレッドの全レス件数が取得できませんでした",
         ),
         message: "Failed to retrieve total response count for thread",
       });
       return err(
-        new DataNotFoundError("スレッドの全レス件数が取得できませんでした")
+        new DataNotFoundError("スレッドの全レス件数が取得できませんでした"),
       );
     }
     const totalCount = result[0].total_count;
@@ -235,7 +232,7 @@ export const getResponseByThreadIdAndResNumRangeRepository = async (
       threadIdResult.value,
       threadTitle,
       totalCount,
-      responses
+      responses,
     );
 
     if (threadWithResponsesResult.isErr()) {
@@ -273,8 +270,8 @@ export const getResponseByThreadIdAndResNumRangeRepository = async (
     return err(
       new DatabaseError(
         `レスポンス取得中にエラーが発生しました: ${message}`,
-        error
-      )
+        error,
+      ),
     );
   }
 };

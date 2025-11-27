@@ -1,8 +1,6 @@
-import { err, ok } from "neverthrow";
-
-import { ValidationError } from "../../../shared/types/Error";
-
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { ValidationError } from "../../../shared/types/Error";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -12,13 +10,13 @@ export type WriteBoardSlug = {
 };
 
 export const createWriteBoardSlug = (
-  slug: string
+  slug: string,
 ): Result<WriteBoardSlug, ValidationError> => {
   if (!slugRegex.test(slug)) {
     return err(
       new ValidationError(
-        "板スラッグは半角英数字とハイフンのみで構成してください"
-      )
+        "板スラッグは半角英数字とハイフンのみで構成してください",
+      ),
     );
   }
 
@@ -27,4 +25,3 @@ export const createWriteBoardSlug = (
     val: slug,
   });
 };
-

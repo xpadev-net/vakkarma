@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteBoardName } from "./WriteBoardName";
 import { createWriteDefaultAuthorName } from "./WriteDefaultAuthorName";
@@ -38,10 +38,10 @@ describe("WriteNormalConfig", () => {
         expect(result.value.boardName).toBe(boardNameResult.value);
         expect(result.value.localRule).toBe(localRuleResult.value);
         expect(result.value.defaultAuthorName).toBe(
-          defaultAuthorNameResult.value
+          defaultAuthorNameResult.value,
         );
         expect(result.value.maxContentLength).toBe(
-          maxContentLengthResult.value
+          maxContentLengthResult.value,
         );
       }
     }

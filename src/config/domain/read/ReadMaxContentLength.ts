@@ -1,6 +1,5 @@
-import { ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { ok } from "neverthrow";
 
 export type ReadMaxContentLength = {
   readonly _type: "ReadMaxContentLength";
@@ -8,7 +7,7 @@ export type ReadMaxContentLength = {
 };
 
 export const createReadMaxContentLength = (
-  maxContentLength: number
+  maxContentLength: number,
 ): Result<ReadMaxContentLength, Error> => {
   return ok({
     _type: "ReadMaxContentLength",

@@ -6,4 +6,3 @@ export type BoardContext = {
   readonly defaultAuthorName: string;
   readonly maxContentLength: number;
 };
-

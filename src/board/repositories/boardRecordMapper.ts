@@ -4,11 +4,10 @@ import { createReadBoardName } from "../../config/domain/read/ReadBoardName";
 import { createReadDefaultAuthorName } from "../../config/domain/read/ReadDefaultAuthorName";
 import { createReadLocalRule } from "../../config/domain/read/ReadLocalRule";
 import { createReadMaxContentLength } from "../../config/domain/read/ReadMaxContentLength";
+import type { ReadBoard } from "../domain/read/ReadBoard";
 import { createReadBoard } from "../domain/read/ReadBoard";
 import { createReadBoardId } from "../domain/read/ReadBoardId";
 import { createReadBoardSlug } from "../domain/read/ReadBoardSlug";
-
-import type { ReadBoard } from "../domain/read/ReadBoard";
 
 export type BoardRecord = {
   id: string;
@@ -23,7 +22,7 @@ export type BoardRecord = {
 };
 
 export const mapBoardRecordToDomain = (
-  record: BoardRecord
+  record: BoardRecord,
 ): Result<ReadBoard, Error> => {
   const converted = Result.combine([
     createReadBoardId(record.id),
@@ -59,4 +58,3 @@ export const mapBoardRecordToDomain = (
     orderIndex: record.order_index,
   });
 };
-

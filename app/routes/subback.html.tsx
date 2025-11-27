@@ -36,7 +36,7 @@ export default createRoute(async (c) => {
   if (!boardSlug) {
     return c.redirect(
       `/boards/${boardContextResult.value.slug}/subback.html`,
-      302
+      302,
     );
   }
 
@@ -77,10 +77,7 @@ export default createRoute(async (c) => {
   });
 
   return c.render(
-    <BoardLayout
-      boards={boardLinks}
-      activeSlug={boardContextResult.value.slug}
-    >
+    <BoardLayout boards={boardLinks} activeSlug={boardContextResult.value.slug}>
       <section className="bg-white rounded-lg shadow-md p-6">
         <h1 className="text-2xl font-bold mb-4">
           {boardContextResult.value.boardName} - スレッド一覧
@@ -107,6 +104,6 @@ export default createRoute(async (c) => {
           </a>
         </div>
       </section>
-    </BoardLayout>
+    </BoardLayout>,
   );
 });

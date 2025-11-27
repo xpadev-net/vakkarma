@@ -3,13 +3,12 @@ import { createRoute } from "honox/factory";
 import { updatePasswordUsecase } from "../../../src/config/usecases/updatePasswordUsecase";
 import { ErrorMessage } from "../../components/ErrorMessage";
 
- 
 export const POST = createRoute(async (c) => {
   const { sql, logger } = c.var;
   // Check DB connection
   if (!sql) {
     return c.render(
-      <ErrorMessage error={new Error("DBに接続できませんでした")} />
+      <ErrorMessage error={new Error("DBに接続できませんでした")} />,
     );
   }
   // Parse and validate form fields
@@ -23,12 +22,12 @@ export const POST = createRoute(async (c) => {
     typeof confirmNewPassword !== "string"
   ) {
     return c.render(
-      <ErrorMessage error={new Error("すべての項目を入力してください")} />
+      <ErrorMessage error={new Error("すべての項目を入力してください")} />,
     );
   }
   const updateResult = await updatePasswordUsecase(
     { sql, logger },
-    { oldPassword, newPassword, confirmNewPassword }
+    { oldPassword, newPassword, confirmNewPassword },
   );
   if (updateResult.isErr()) {
     return c.render(<ErrorMessage error={updateResult.error} />);
@@ -99,6 +98,6 @@ export default createRoute(async (c) => {
           </div>
         </form>
       </section>
-    </main>
+    </main>,
   );
 });

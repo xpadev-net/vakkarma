@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createWriteBoardName } from "./WriteBoardName";
 
@@ -22,19 +22,19 @@ describe("WriteBoardName", () => {
 
   it("50文字を超える場合はエラーになること", () => {
     const result = createWriteBoardName(
-      "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす。。。。"
+      "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす。。。。",
     ); // 51文字
     expect(result.isErr()).toBe(true);
     if (result.isErr()) {
       expect(result.error.message).toBe(
-        "ボード名は50文字以内で入力してください"
+        "ボード名は50文字以内で入力してください",
       );
     }
   });
 
   it("ちょうど20文字の場合は作成できること", () => {
     const result = createWriteBoardName(
-      "あいうえおかきくけこさしすせそたちつてと"
+      "あいうえおかきくけこさしすせそたちつてと",
     ); // 20文字
     expect(result.isOk()).toBe(true);
   });

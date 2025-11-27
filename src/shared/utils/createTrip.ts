@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 export const createTrip = (tripKey: string): string => {
   const crypted = crypto

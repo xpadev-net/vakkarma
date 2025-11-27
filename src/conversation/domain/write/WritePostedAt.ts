@@ -9,7 +9,7 @@ export type WritePostedAt = {
 };
 
 export const createWritePostedAt = (
-  value: Date
+  value: Date,
 ): Result<WritePostedAt, ValidationError> => {
   return ok({ _type: "WritePostedAt", val: value });
 };

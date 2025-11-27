@@ -1,12 +1,11 @@
+import type { Result } from "neverthrow";
 import { ok } from "neverthrow";
-
-import type { ReadBoardId } from "./ReadBoardId";
-import type { ReadBoardSlug } from "./ReadBoardSlug";
 import type { ReadBoardName } from "../../../config/domain/read/ReadBoardName";
 import type { ReadDefaultAuthorName } from "../../../config/domain/read/ReadDefaultAuthorName";
 import type { ReadLocalRule } from "../../../config/domain/read/ReadLocalRule";
 import type { ReadMaxContentLength } from "../../../config/domain/read/ReadMaxContentLength";
-import type { Result } from "neverthrow";
+import type { ReadBoardId } from "./ReadBoardId";
+import type { ReadBoardSlug } from "./ReadBoardSlug";
 
 export type ReadBoard = {
   readonly _type: "ReadBoard";
@@ -55,4 +54,3 @@ export const createReadBoard = ({
     orderIndex,
   });
 };
-

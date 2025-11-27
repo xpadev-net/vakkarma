@@ -1,8 +1,6 @@
-import { ok, err } from "neverthrow";
-
-import { ValidationError } from "../../../shared/types/Error";
-
 import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import { ValidationError } from "../../../shared/types/Error";
 
 export type WriteDefaultAuthorName = {
   readonly _type: "WriteDefaultAuthorName";
@@ -10,7 +8,7 @@ export type WriteDefaultAuthorName = {
 };
 
 export const createWriteDefaultAuthorName = (
-  value: string
+  value: string,
 ): Result<WriteDefaultAuthorName, ValidationError> => {
   if (value.length === 0) {
     return err(new ValidationError("デフォルトのユーザ名を入力してください"));
@@ -18,7 +16,7 @@ export const createWriteDefaultAuthorName = (
 
   if (value.length > 20) {
     return err(
-      new ValidationError("デフォルトのユーザ名は20文字以内で入力してください")
+      new ValidationError("デフォルトのユーザ名は20文字以内で入力してください"),
     );
   }
   return ok({ _type: "WriteDefaultAuthorName", val: value });

@@ -1,6 +1,5 @@
-import { ok } from "neverthrow";
-
 import type { Result } from "neverthrow";
+import { ok } from "neverthrow";
 
 export type ReadPasswordHash = {
   readonly _type: "ReadPasswordHash";
@@ -8,7 +7,7 @@ export type ReadPasswordHash = {
 };
 
 export const createReadPasswordHash = (
-  passwordHash: string
+  passwordHash: string,
 ): Result<ReadPasswordHash, Error> => {
   return ok({
     _type: "ReadPasswordHash",
