@@ -15,34 +15,82 @@ concurrency:
   cancel-in-progress: true # PRの場合、最新のコミットのみを実行する方が効率的 (mainへのpushではfalseが良い場合も)
 
 jobs:
-  build:
+  typecheck:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: true
+      - name: Typecheck
+        run: pnpm run typecheck
 
-      # Node.jsとpnpmのセットアップを削除し、Bunの公式セットアップアクションを使用
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: true
+      - name: Lint
+        run: pnpm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: true
+      - name: Test
+        run: pnpm test
+
+  build_bun:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-        # with:
-        #   bun-version: latest # 特定のバージョンが必要な場合は指定 (例: '1.1.8')
-        # oven-sh/setup-bun は自動でBunのキャッシュを設定します
-
       - name: Install dependencies
         run: bun install
-
-      - name: Typecheck
-        run: bun run typecheck
-
-      - name: Lint
-        run: bun run lint
-
-      - name: Test
-        run: bun test
-
       - name: Build Bun
-        run: bun run build:bun
+        run: pnpm run build:bun
 
+  build_workers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: true
       - name: Build Workers
-        run: bun run build:workers
+        run: pnpm run build:workers
