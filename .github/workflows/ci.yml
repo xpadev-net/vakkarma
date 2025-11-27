@@ -45,7 +45,7 @@ jobs:
         with:
           run_install: true
       - name: Lint
-        run: pnpm run lints
+        run: pnpm run lint
 
   build_bun:
     runs-on: ubuntu-latest
