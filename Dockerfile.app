@@ -20,6 +20,7 @@ WORKDIR /dist
 
 # ビルドステージから必要なファイルだけコピー
 COPY --from=build /app/dist /dist
+COPY --from=build /app/db/migrations /db/migrations
 
-# アプリケーションの実行
-CMD ["./index.js"]
+# アプリケーションの実行（マイグレーション実行後にサーバー起動）
+CMD ["sh", "-c", "bunx dbmate --url \"$DATABASE_URL\" --migrations-dir /db/migrations up && bun ./index.js"]
