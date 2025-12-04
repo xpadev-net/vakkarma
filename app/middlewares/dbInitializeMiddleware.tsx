@@ -75,12 +75,17 @@ const initializeDbClientInternal = (
   const { envKey, postgresOptions, contextKey, isCloudflareWorkers } = options;
   try {
     // 環境変数を取得 (Honoのアダプタを使用)
-    const databaseUrl =
-      // 本番環境の場合
-      env<{ [key: string]: string }>(c)[envKey] ||
-      // 開発環境の場合
-      // prettier-ignore
-      `postgresql://${import.meta.env.VITE_POSTGRES_USER}:${import.meta.env.VITE_POSTGRES_PASSWORD}@localhost:5432/${import.meta.env.VITE_POSTGRES_DB}?sslmode=disable`;
+    const allEnv = env<{ [key: string]: string }>(c);
+    // 本番用の接続文字列 (例: Cloudflare の環境変数や Docker 上の DATABASE_URL)
+    const databaseUrlFromEnv = allEnv[envKey];
+    // ローカル開発用のフォールバック接続文字列
+    // prettier-ignore
+    const databaseUrlFallback = `postgresql://${import.meta.env.VITE_POSTGRES_USER}:${import.meta.env.VITE_POSTGRES_PASSWORD}@localhost:5432/${import.meta.env.VITE_POSTGRES_DB}?sslmode=disable`;
+
+    // 実際に使用する接続文字列
+    const databaseUrl = databaseUrlFromEnv || databaseUrlFallback;
+    // 接続文字列が環境変数由来かどうか（= 本番想定かどうか）
+    const isDatabaseUrlFromEnv = Boolean(databaseUrlFromEnv);
 
     if (!databaseUrl) {
       // 接続文字列が見つからない場合はエラーログを出力し、nullを返す
@@ -91,26 +96,47 @@ const initializeDbClientInternal = (
     }
 
     // postgres.js に渡す最終的なオプションを準備
+    const baseOptions: postgres.Options<Record<string, postgres.PostgresType>> =
+      {
+        // 提供されたオプションをベースにする
+        ...postgresOptions,
+        // 環境に応じた調整 (例: Workersではデフォルトの最大接続数を調整)
+        // 注意: Hyperdriveを使用する場合、maxはHyperdrive側で管理されるため、ここでの指定の影響は限定的です。
+        //       Hyperdriveを使わない直接接続の場合、Workersでは少ない値(例: 1)が推奨されることがあります。
+        max: isCloudflareWorkers
+          ? (postgresOptions?.max ?? 1)
+          : postgresOptions?.max, // Workers環境ではデフォルト1、それ以外は指定値 or デフォルト
+        // --- その他の推奨オプション例 ---
+        // idle_timeout: postgresOptions?.idle_timeout ?? 20, // アイドル接続のタイムアウト(秒)
+        // connect_timeout: postgresOptions?.connect_timeout ?? 10, // 接続試行のタイムアウト(秒)
+        // transform: { // 例: snake_case -> camelCase 変換
+        //   column: postgres.toCamel,
+        //   ...postgresOptions.transform,
+        // },
+        // ---------------------------------
+      };
+
+    // 本番環境（DATABASE_URL 由来）の場合のみ SSL を有効化する
+    // 自己署名証明書を想定し、デフォルトでは rejectUnauthorized: false を付与する。
+    // ただし、呼び出し側で ssl オプションが明示されている場合はそれを優先する。
+    const shouldEnableSslForEnvUrl = isDatabaseUrlFromEnv;
     const finalOptions: postgres.Options<
       Record<string, postgres.PostgresType>
     > = {
-      // 提供されたオプションをベースにする
-      ...postgresOptions,
-      // 環境に応じた調整 (例: Workersではデフォルトの最大接続数を調整)
-      // 注意: Hyperdriveを使用する場合、maxはHyperdrive側で管理されるため、ここでの指定の影響は限定的です。
-      //       Hyperdriveを使わない直接接続の場合、Workersでは少ない値(例: 1)が推奨されることがあります。
-      max: isCloudflareWorkers
-        ? (postgresOptions?.max ?? 1)
-        : postgresOptions?.max, // Workers環境ではデフォルト1、それ以外は指定値 or デフォルト
-      // --- その他の推奨オプション例 ---
-      // idle_timeout: postgresOptions?.idle_timeout ?? 20, // アイドル接続のタイムアウト(秒)
-      // connect_timeout: postgresOptions?.connect_timeout ?? 10, // 接続試行のタイムアウト(秒)
-      // transform: { // 例: snake_case -> camelCase 変換
-      //   column: postgres.toCamel,
-      //   ...postgresOptions.transform,
-      // },
-      // ---------------------------------
+      ...baseOptions,
+      ...(shouldEnableSslForEnvUrl && baseOptions.ssl === undefined
+        ? {
+            // Node.js の場合は https.Agent / tls.connect に渡されるオプション。
+            // Cloudflare Workers 等では環境によっては無視されるが、安全のため共通で付与しておく。
+            ssl: { rejectUnauthorized: false } as unknown as boolean,
+          }
+        : {}),
     };
+
+    const sslLogStatus =
+      finalOptions.ssl === undefined || finalOptions.ssl === false
+        ? "disabled"
+        : "enabled";
 
     // postgres クライアントを初期化
     const client = postgres(databaseUrl, finalOptions);
@@ -119,7 +145,11 @@ const initializeDbClientInternal = (
     console.log(
       `[${contextKey}] Database client initialized successfully. (Environment: ${
         isCloudflareWorkers ? "Cloudflare Workers" : "Other"
-      }, Strategy: ${isCloudflareWorkers ? "Per-request" : "Shared Instance"})`,
+      }, Strategy: ${
+        isCloudflareWorkers ? "Per-request" : "Shared Instance"
+      }, SSL: ${sslLogStatus}, UrlSource: ${
+        isDatabaseUrlFromEnv ? "env" : "fallback"
+      })`,
     );
     return client;
   } catch (error) {
