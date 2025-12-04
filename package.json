@@ -1,7 +1,7 @@
 {
   "name": "basic",
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "dev": "vite",
     "build:workers": "vite build --mode client && vite build --mode workers",
